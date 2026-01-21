@@ -1,0 +1,63 @@
+/* Vocabulary Table Component Styles */
+.vocabulary-table {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.vocabulary-table__title {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.vocabulary-table__data {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.vocabulary-table__header {
+  background: #f5f5f5;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+}
+
+.vocabulary-table__row {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+
+.vocabulary-table__row:hover {
+  background-color: #fafafa;
+}
+
+.vocabulary-table__cell {
+  padding: 1rem;
+  color: #555;
+  word-wrap: break-word;
+  max-width: 300px;
+}
+
+.vocabulary-table__empty {
+  padding: 2rem;
+  text-align: center;
+  color: #999;
+}
+
+.vocabulary-table__loading,
+.vocabulary-table__error {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.vocabulary-table__error {
+  color: #d32f2f;
+}
