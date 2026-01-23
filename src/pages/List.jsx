@@ -1,7 +1,7 @@
 import VocabularyTable from '../components/VocabularyTable/VocabularyTable'
 
-function Practice() {
+function List() {
   return <VocabularyTable />
 }
 
-export default Practice
+export default List

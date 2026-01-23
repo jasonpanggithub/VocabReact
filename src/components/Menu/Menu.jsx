@@ -1,17 +1,11 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import navItems from '../../navigation/navItems'
 import './Menu.css'
 
 function Menu() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
-
-  const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/practice', label: 'Practice' },
-    { path: '/lists', label: 'Lists' },
-    { path: '/about', label: 'About' },
-  ]
 
   const handleNavigation = () => {
     setOpen(false)
