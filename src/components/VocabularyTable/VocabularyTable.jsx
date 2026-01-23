@@ -3,7 +3,7 @@ import './VocabularyTable.css'
 import Pagination from '../Pagination/Pagination'
 
 const API_BASE_URL = '/api'
-const PAGE_LENGTH = 10
+const PAGE_LENGTH = 5
 
 function VocabularyTable() {
   const [data, setData] = useState([])
@@ -16,14 +16,13 @@ function VocabularyTable() {
     setLoading(true)
     setError(null)
     try {
-      const start = (pageNum - 1) * PAGE_LENGTH
       const response = await fetch(
-        `${API_BASE_URL}/Vocabulary/Search?draw=1&start=${start/PAGE_LENGTH}&length=${PAGE_LENGTH}`
+        `${API_BASE_URL}/Vocabularies?page=${pageNum}&pageSize=${PAGE_LENGTH}`
       )
       if (!response.ok) throw new Error('Failed to fetch vocabulary data')
       const result = await response.json()
-      setData(result.data || [])
-      setTotalRecords(result.recordsTotal || 0)
+      setData(result.items || [])
+      setTotalRecords(result.totalCount || 0)
       setCurrentPage(pageNum)
     } catch (err) {
       setError(err.message)

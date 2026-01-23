@@ -8,9 +8,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://localhost:44363',
+        target: 'https://localhost:7122',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false,
         agent: new https.Agent({ rejectUnauthorized: false }),
         httpsAgent: new https.Agent({ rejectUnauthorized: false }),
       },
