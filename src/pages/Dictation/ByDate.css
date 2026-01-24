@@ -1,0 +1,23 @@
+﻿.bydate {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.bydate__hint {
+  color: #cfd3ff;
+  margin-bottom: 1rem;
+}
+
+.bydate__selected {
+  color: #f5f5f5;
+  font-weight: 500;
+}
+
+.bydate__selected span {
+  color: #f6c453;
+}
+
+.bydate__error {
+  color: #ff8a8a;
+  margin-bottom: 0.75rem;
+}

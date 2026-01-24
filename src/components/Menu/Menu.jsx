@@ -37,21 +37,62 @@ function Menu() {
         {navItems
           .filter((item) => item.label)
           .map((item) => {
+            if (item.children?.length) {
+              const isActive = item.children.some((child) =>
+                location.pathname.startsWith(child.path)
+              )
+              return (
+                <div key={item.label} className="menu__item">
+                  <button
+                    type="button"
+                    className={`menu__link menu__link--parent ${
+                      isActive ? 'menu__link--active' : ''
+                    }`}
+                    aria-haspopup="true"
+                  >
+                    {item.label}
+                  </button>
+                  <div className="menu__submenu">
+                    {item.children
+                      .filter((child) => child.label)
+                      .map((child) => {
+                        const isChildActive =
+                          child.path === '/'
+                            ? location.pathname === '/'
+                            : location.pathname.startsWith(child.path)
+                        return (
+                          <Link
+                            key={child.path}
+                            to={child.path}
+                            className={`menu__sublink ${
+                              isChildActive ? 'menu__sublink--active' : ''
+                            }`}
+                            onClick={handleNavigation}
+                          >
+                            {child.label}
+                          </Link>
+                        )
+                      })}
+                  </div>
+                </div>
+              )
+            }
+
             const isActive =
               item.path === '/'
                 ? location.pathname === '/'
                 : location.pathname.startsWith(item.path)
             return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`menu__link ${
-                isActive ? 'menu__link--active' : ''
-              }`}
-              onClick={handleNavigation}
-            >
-              {item.label}
-            </Link>
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`menu__link ${
+                  isActive ? 'menu__link--active' : ''
+                }`}
+                onClick={handleNavigation}
+              >
+                {item.label}
+              </Link>
             )
           })}
       </nav>

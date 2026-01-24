@@ -1,0 +1,97 @@
+﻿.dictation {
+  max-width: 760px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.dictation__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dictation__stat {
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border: 1px solid #e2e2e2;
+}
+
+.dictation__label {
+  display: block;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.dictation__value {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.dictation__fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.dictation__field label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.dictation__field input,
+.dictation__field textarea {
+  width: 100%;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.dictation__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.dictation__button {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.dictation__button:hover {
+  background: #1d4ed8;
+}
+
+@media (max-width: 600px) {
+  .dictation__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dictation__actions {
+    justify-content: stretch;
+  }
+
+  .dictation__button {
+    flex: 1;
+  }
+}

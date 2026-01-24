@@ -5,12 +5,16 @@ import Content from './components/Content/Content'
 import navItems from './navigation/navItems'
 
 function App() {
+  const routes = navItems.flatMap((item) =>
+    item.children ? item.children : item
+  )
+
   return (
     <Router>
       <Menu />
       <Content>
         <Routes>
-          {navItems.map((item) => (
+          {routes.map((item) => (
             <Route key={item.path} path={item.path} element={item.element} />
           ))}
         </Routes>

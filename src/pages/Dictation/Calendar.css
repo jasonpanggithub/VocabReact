@@ -1,0 +1,88 @@
+﻿.bydate__calendar {
+  max-width: 420px;
+  margin: 0 auto 1.25rem;
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.bydate__calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.bydate__nav-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.bydate__month {
+  font-weight: 600;
+  color: #333;
+}
+
+.bydate__nav {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #e6e6e6;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.bydate__weekdays,
+.bydate__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+}
+
+.bydate__weekday {
+  font-size: 0.8rem;
+  color: #666;
+  padding: 0.35rem 0;
+}
+
+.bydate__cell {
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: default;
+  font-size: 0.9rem;
+}
+
+.bydate__cell.enabled {
+  background: transparent;
+  border-color: transparent;
+  color: #1fa44a;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bydate__cell.enabled:hover {
+  background: transparent;
+  border-color: transparent;
+  color: #15803d;
+}
+
+.bydate__cell.disabled {
+  color: #b9b9b9;
+}
+
+.bydate__cell.selected {
+  background: #3b4bff;
+  color: #fff;
+  border-color: #3b4bff;
+}
+
+.bydate__cell.empty {
+  border: none;
+  background: transparent;
+}
