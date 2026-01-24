@@ -1,6 +1,13 @@
+import { useEffect, useMemo, useState } from 'react'
 import './Pagination.css'
 
 function Pagination({ currentPage, totalPages, onPageChange }) {
+  const [jumpInput, setJumpInput] = useState(String(currentPage))
+
+  useEffect(() => {
+    setJumpInput(String(currentPage))
+  }, [currentPage])
+
   const handlePrevious = () => {
     if (currentPage > 1) onPageChange(currentPage - 1)
   }
@@ -11,6 +18,21 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
 
   const handlePageClick = (pageNum) => {
     onPageChange(pageNum)
+  }
+
+  const jumpTarget = useMemo(() => {
+    if (!jumpInput) return null
+    const parsed = Number.parseInt(jumpInput, 10)
+    if (!Number.isFinite(parsed)) return null
+    if (parsed < 1 || parsed > totalPages) return null
+    return parsed
+  }, [jumpInput, totalPages])
+
+  const handleJump = (event) => {
+    event.preventDefault()
+    if (jumpTarget == null) return
+    if (jumpTarget === currentPage) return
+    onPageChange(jumpTarget)
   }
 
   const getPageNumbers = () => {
@@ -92,6 +114,29 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         Next
       </button>
 
+      <form className="pagination__jump" onSubmit={handleJump}>
+        <label className="pagination__jump-label" htmlFor="pagination-jump">
+          Jump to
+        </label>
+        <input
+          id="pagination-jump"
+          className="pagination__jump-input"
+          type="number"
+          min="1"
+          max={totalPages}
+          inputMode="numeric"
+          value={jumpInput}
+          onChange={(event) => setJumpInput(event.target.value)}
+          aria-label="Jump to page"
+        />
+        <button
+          className="pagination__button pagination__button--jump"
+          type="submit"
+          disabled={jumpTarget == null}
+        >
+          Go
+        </button>
+      </form>
     </div>
   )
 }
