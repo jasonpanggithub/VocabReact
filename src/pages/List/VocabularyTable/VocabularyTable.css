@@ -27,17 +27,7 @@
   flex-wrap: wrap;
 }
 
-.vocabulary-table__search {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  color: #d8d8d8;
-}
 
-.vocabulary-table__search-label {
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
-}
 
 .vocabulary-table__search-input {
   min-width: 220px;

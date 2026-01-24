@@ -84,8 +84,8 @@ function VocabularyTable() {
       <form className="vocabulary-table__header-row" onSubmit={handleSearchSubmit}>
         <h2 className="vocabulary-table__title">Vocabulary List</h2>
         <div className="vocabulary-table__search-controls">
-          <label className="vocabulary-table__search">
-            <span className="vocabulary-table__search-label">Search</span>
+          
+            
             <input
               className="vocabulary-table__search-input"
               type="text"
@@ -94,7 +94,7 @@ function VocabularyTable() {
               placeholder="Type a term..."
               aria-label="Search vocabulary"
             />
-          </label>
+          
           <button className="vocabulary-table__search-button" type="submit">
             Search
           </button>
