@@ -34,18 +34,26 @@ function Menu() {
         id="primary-navigation"
         className={`menu__links ${open ? 'is-open' : ''}`}
       >
-        {navItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`menu__link ${
-              location.pathname === item.path ? 'menu__link--active' : ''
-            }`}
-            onClick={handleNavigation}
-          >
-            {item.label}
-          </Link>
-        ))}
+        {navItems
+          .filter((item) => item.label)
+          .map((item) => {
+            const isActive =
+              item.path === '/'
+                ? location.pathname === '/'
+                : location.pathname.startsWith(item.path)
+            return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`menu__link ${
+                isActive ? 'menu__link--active' : ''
+              }`}
+              onClick={handleNavigation}
+            >
+              {item.label}
+            </Link>
+            )
+          })}
       </nav>
     </header>
   )

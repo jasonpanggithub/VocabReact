@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import './VocabularyTable.css'
 import Pagination from '../Pagination/Pagination'
 
@@ -19,10 +20,19 @@ function VocabularyTable() {
       const response = await fetch(
         `${API_BASE_URL}/Vocabularies?page=${pageNum}&pageSize=${PAGE_LENGTH}`
       )
-      if (!response.ok) throw new Error('Failed to fetch vocabulary data')
+      if (!response.ok) {
+        throw new Error(`Failed to fetch vocabulary data (${response.status})`)
+      }
       const result = await response.json()
-      setData(result.items || [])
-      setTotalRecords(result.totalCount || 0)
+      const items = Array.isArray(result)
+        ? result
+        : result.items || result.data || result.results || []
+      const totalCountHeader = response.headers.get('x-total-count')
+      const totalCount = Number.isFinite(Number(totalCountHeader))
+        ? Number(totalCountHeader)
+        : result.totalCount || result.total || result.count || items.length
+      setData(items)
+      setTotalRecords(totalCount)
       setCurrentPage(pageNum)
     } catch (err) {
       setError(err.message)
@@ -43,13 +53,14 @@ function VocabularyTable() {
 
   return (
     <div className="vocabulary-table">
-      <h2 className="vocabulary-table__title">Vocabulary Practice</h2>
+      <h2 className="vocabulary-table__title">Vocabulary List</h2>
       <table className="vocabulary-table__data">
         <thead>
           <tr>
             <th className="vocabulary-table__header">Spelling</th>
             <th className="vocabulary-table__header">Pronunciation</th>
             <th className="vocabulary-table__header">Definition</th>
+            <th className="vocabulary-table__header">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -61,11 +72,19 @@ function VocabularyTable() {
                   {vocab.pronunciation || '—'}
                 </td>
                 <td className="vocabulary-table__cell">{vocab.definition}</td>
+                <td className="vocabulary-table__cell">
+                  <Link
+                    to={`/edit/${vocab.id}`}
+                    className="vocabulary-table__action-link"
+                  >
+                    Edit
+                  </Link>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="3" className="vocabulary-table__empty">
+              <td colSpan="4" className="vocabulary-table__empty">
                 No vocabulary data available
               </td>
             </tr>

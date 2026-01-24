@@ -1,13 +1,13 @@
 /* Vocabulary Table Component Styles */
 .vocabulary-table {
-  padding: 2rem;
+  padding: 1rem;
   max-width: 1000px;
   margin: 0 auto;
 }
 
 .vocabulary-table__title {
   margin-bottom: 1.5rem;
-  color: #333;
+  color: #d8d8d8;
   font-size: 1.5rem;
 }
 
@@ -61,3 +61,18 @@
 .vocabulary-table__error {
   color: #d32f2f;
 }
+
+.vocabulary-table__action-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.vocabulary-table__action-link:hover {
+  background-color: #0056b3;
+}
+
