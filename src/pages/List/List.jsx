@@ -1,4 +1,4 @@
-import VocabularyTable from '../../components/VocabularyTable/VocabularyTable'
+import VocabularyTable from './VocabularyTable/VocabularyTable'
 
 function List() {
   return <VocabularyTable />
