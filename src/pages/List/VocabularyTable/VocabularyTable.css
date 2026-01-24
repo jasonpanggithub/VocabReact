@@ -6,9 +6,70 @@
 }
 
 .vocabulary-table__title {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   color: #d8d8d8;
   font-size: 1.5rem;
+}
+
+.vocabulary-table__header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.vocabulary-table__search-controls {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.vocabulary-table__search {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: #d8d8d8;
+}
+
+.vocabulary-table__search-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.vocabulary-table__search-input {
+  min-width: 220px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #4b4b4b;
+  background: #1f1f1f;
+  color: #f5f5f5;
+}
+
+.vocabulary-table__search-input::placeholder {
+  color: #a9a9a9;
+}
+
+.vocabulary-table__search-input:focus {
+  outline: none;
+  border-color: #6c6c6c;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+.vocabulary-table__search-button {
+  padding: 0.55rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.vocabulary-table__search-button:hover {
+  background: #0056b3;
 }
 
 .vocabulary-table__data {
