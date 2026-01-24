@@ -1,3 +1,5 @@
+import './Pagination.css'
+
 function Pagination({ currentPage, totalPages, onPageChange }) {
   const handlePrevious = () => {
     if (currentPage > 1) onPageChange(currentPage - 1)
@@ -89,6 +91,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
       >
         Next
       </button>
+
     </div>
   )
 }

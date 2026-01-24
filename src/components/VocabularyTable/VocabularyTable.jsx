@@ -24,15 +24,8 @@ function VocabularyTable() {
         throw new Error(`Failed to fetch vocabulary data (${response.status})`)
       }
       const result = await response.json()
-      const items = Array.isArray(result)
-        ? result
-        : result.items || result.data || result.results || []
-      const totalCountHeader = response.headers.get('x-total-count')
-      const totalCount = Number.isFinite(Number(totalCountHeader))
-        ? Number(totalCountHeader)
-        : result.totalCount || result.total || result.count || items.length
-      setData(items)
-      setTotalRecords(totalCount)
+      setData(result.items)
+      setTotalRecords(result.totalCount)
       setCurrentPage(pageNum)
     } catch (err) {
       setError(err.message)

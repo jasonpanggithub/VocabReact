@@ -1,13 +1,12 @@
-import Home from '../pages/Home'
-import List from '../pages/List'
-import Edit from '../pages/Edit'
-import About from '../pages/About'
+import Home from '../pages/Home/Home'
+import List from '../pages/List/List'
+import Edit from '../pages/Edit/Edit'
+import About from '../pages/About/About'
 
 const navItems = [
   { path: '/', label: 'Home', element: <Home /> },
   { path: '/list', label: 'List', element: <List /> },
-  { path: '/edit', label: 'Edit', element: <Edit /> },
-  { path: '/edit/:id', element: <Edit /> },
+  { path: '/edit/:id', element: <Edit /> },  // though it is not shown in the menu, we keep it here for routing purposes
   { path: '/about', label: 'About', element: <About /> },
 ]
 
