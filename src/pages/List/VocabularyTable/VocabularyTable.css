@@ -124,6 +124,16 @@
   margin-right: 0.5rem;
 }
 
+.vocabulary-table__action-link--icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
 .vocabulary-table__action-link:hover {
   background-color: #0056b3;
 }

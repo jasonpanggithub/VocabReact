@@ -150,9 +150,11 @@ function VocabularyTable() {
                 <td className="vocabulary-table__cell">
                   <Link
                     to={`/edit/${vocab.id}`}
-                    className="vocabulary-table__action-link"
+                    className="vocabulary-table__action-link vocabulary-table__action-link--icon"
+                    aria-label={`Edit ${vocab.spelling}`}
+                    title="Edit"
                   >
-                    Edit
+                    &#9998;
                   </Link>
                   <button
                     type="button"
