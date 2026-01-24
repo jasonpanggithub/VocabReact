@@ -76,6 +76,35 @@ function VocabularyTable() {
   const totalPages = Math.ceil(totalRecords / PAGE_LENGTH)
   const isSearching = searchTerm.trim().length > 0
 
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm('Delete this vocabulary entry?')
+    if (!confirmed) return
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`${API_BASE_URL}/Vocabularies/${id}`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to delete vocabulary (${response.status})`)
+      }
+      if (isSearching) {
+        const trimmed = searchTerm.trim()
+        if (trimmed) {
+          await searchVocabulary(trimmed)
+          return
+        }
+      }
+      const nextPage =
+        data.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage
+      await fetchVocabulary(nextPage)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   if (loading) return <div className="vocabulary-table__loading">Loading...</div>
   if (error) return <div className="vocabulary-table__error">Error: {error}</div>
 
@@ -125,6 +154,15 @@ function VocabularyTable() {
                   >
                     Edit
                   </Link>
+                  <button
+                    type="button"
+                    className="vocabulary-table__delete-button"
+                    onClick={() => handleDelete(vocab.id)}
+                    aria-label={`Delete ${vocab.spelling}`}
+                    title="Delete"
+                  >
+                    &times;
+                  </button>
                 </td>
               </tr>
             ))
