@@ -25,6 +25,8 @@ function ByDate() {
   const [availableDates, setAvailableDates] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [vocabList, setVocabList] = useState([])
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
     const fetchAvailableDates = async () => {
@@ -50,9 +52,42 @@ function ByDate() {
     fetchAvailableDates()
   }, [])
 
+  useEffect(() => {
+    if (!selectedDate) return
+
+    const fetchByDate = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const dateKey = toDateKey(selectedDate)
+        const response = await fetch(
+          `${API_BASE_URL}/Vocabularies/by-updated-date?date=${dateKey}`
+        )
+        if (!response.ok) {
+          throw new Error(`Failed to load vocabularies (${response.status})`)
+        }
+        const result = await response.json()
+        const list = Array.isArray(result) ? result : []
+        setVocabList(list)
+        setCurrentIndex(0)
+      } catch (err) {
+        setError(err.message)
+        setVocabList([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchByDate()
+  }, [selectedDate])
+
   const handleSelectDate = (date) => {
     if (!date) return
     setSelectedDate(date)
+  }
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => Math.min(prev + 1, vocabList.length - 1))
   }
 
   const selectedLabel = selectedDate
@@ -64,14 +99,19 @@ function ByDate() {
       })
     : 'No date selected'
 
+  const currentVocab = vocabList[currentIndex] || null
+  const isNextDisabled = currentIndex >= vocabList.length - 1
+
   return (
     <div className="bydate">
       <h1>Dictation by Date</h1>
-      <p className="bydate__hint">
-        {loading
-          ? 'Loading available dates...'
-          : 'Select a date from the available list.'}
-      </p>
+      {!selectedDate && (
+        <p className="bydate__hint">
+          {loading
+            ? 'Loading available dates...'
+            : 'Select a date from the available list.'}
+        </p>
+      )}
       {error && <div className="bydate__error">Error: {error}</div>}
 
       {selectedDate ? (
@@ -79,7 +119,20 @@ function ByDate() {
           <div className="bydate__selected">
             Selected: <span>{selectedLabel}</span>
           </div>
-          <Dictation />
+          {loading ? (
+            <div className="bydate__loading">Loading vocabularies...</div>
+          ) : (
+            <Dictation
+              pronunciation={currentVocab?.pronunciation}
+              definition={currentVocab?.definition}
+              example={currentVocab?.example}
+              total={vocabList.length}
+              current={vocabList.length ? currentIndex + 1 : 0}
+              correct={0}
+              onNext={handleNext}
+              isNextDisabled={isNextDisabled}
+            />
+          )}
         </>
       ) : (
         <Calendar
