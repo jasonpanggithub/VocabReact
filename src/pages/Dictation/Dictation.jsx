@@ -5,54 +5,85 @@ const handlePlay = (saySomething) => {
   if (!window.responsiveVoice || typeof window.responsiveVoice.speak !== 'function') {
     return
   }
+  if (!saySomething) return
   window.responsiveVoice.speak(saySomething)
 }
 
-function Dictation({
-  spelling,
-  pronunciation,
-  definition,
-  example,
-  total = 0,
-  current = 0,
-  correct = 0,
-  onShow,
-  onNext,
-  onCorrect,
-  isNextDisabled = false,
-}) {
+function Dictation({ vocabList = [] }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [correctCount, setCorrectCount] = useState(0)
   const [spellingInput, setSpellingInput] = useState('')
   const [showDetails, setShowDetails] = useState(false)
   const [hasMatched, setHasMatched] = useState(false)
   const lastSpokenRef = useRef(null)
-  
+
+  const total = vocabList.length
+  const currentVocab = vocabList[currentIndex] || null
+  const isNextDisabled = currentIndex >= vocabList.length - 1
+
+  useEffect(() => {
+    setCurrentIndex(0)
+    setCorrectCount(0)
+    setSpellingInput('')
+    setHasMatched(false)
+  }, [vocabList])
+
   useEffect(() => {
     setSpellingInput('')
     setHasMatched(false)
-  }, [pronunciation, definition, example])
+  }, [currentVocab?.spelling])
 
   useEffect(() => {
+    const spelling = currentVocab?.spelling
     if (!spelling) return
     if (lastSpokenRef.current === spelling) return
     handlePlay(spelling)
     lastSpokenRef.current = spelling
-  }, [spelling])
+  }, [currentVocab?.spelling])
 
   const handleSpellingSubmit = (event) => {
     event.preventDefault()
     if (hasMatched) return
-    const expected = (spelling || '').trim()
+    const expected = (currentVocab?.spelling || '').trim()
     const actual = spellingInput.trim()
     if (!expected || !actual) return
     if (expected === actual) {
       setHasMatched(true)
-      if (onCorrect) onCorrect()
+      setCorrectCount((prev) => prev + 1)
+      if (currentIndex < vocabList.length - 1) {
+        setCurrentIndex((prev) => prev + 1)
+      }
     } else {
       handlePlay('wrong')
     }
   }
 
-  
+  const handleNext = () => {
+    setCurrentIndex((prev) => Math.min(prev + 1, vocabList.length - 1))
+  }
+
+  if (!currentVocab) {
+    return (
+      <div className="dictation">
+        <div className="dictation__stats">
+          <div className="dictation__stat">
+            <span className="dictation__label">Total</span>
+            <span className="dictation__value">0</span>
+          </div>
+          <div className="dictation__stat">
+            <span className="dictation__label">Current</span>
+            <span className="dictation__value">0</span>
+          </div>
+          <div className="dictation__stat">
+            <span className="dictation__label">Correct</span>
+            <span className="dictation__value">0</span>
+          </div>
+        </div>
+        <div className="dictation__empty">No vocabularies available.</div>
+      </div>
+    )
+  }
+
   return (
     <div className="dictation">
       <div className="dictation__stats">
@@ -62,11 +93,11 @@ function Dictation({
         </div>
         <div className="dictation__stat">
           <span className="dictation__label">Current</span>
-          <span className="dictation__value">{current}</span>
+          <span className="dictation__value">{currentIndex + 1}</span>
         </div>
         <div className="dictation__stat">
           <span className="dictation__label">Correct</span>
-          <span className="dictation__value">{correct}</span>
+          <span className="dictation__value">{correctCount}</span>
         </div>
       </div>
 
@@ -85,19 +116,19 @@ function Dictation({
             <div className="dictation__field">
               <label className="dictation__label-inline">Pronunciation</label>
               <span className="dictation__readonly-value">
-                {pronunciation || '-'}
+                {currentVocab.pronunciation || '-'}
               </span>
             </div>
             <div className="dictation__field">
               <label className="dictation__label-inline">Definition</label>
               <span className="dictation__readonly-value">
-                {definition || '-'}
+                {currentVocab.definition || '-'}
               </span>
             </div>
             <div className="dictation__field">
               <label className="dictation__label-inline">Example</label>
               <span className="dictation__readonly-value">
-                {example || '-'}
+                {currentVocab.example || '-'}
               </span>
             </div>
           </>
@@ -108,24 +139,21 @@ function Dictation({
         <button
           type="button"
           className="dictation__button"
-          onClick={() => handlePlay(spelling)}
+          onClick={() => handlePlay(currentVocab.spelling)}
         >
           Play
         </button>
         <button
           type="button"
           className="dictation__button"
-          onClick={() => {
-            setShowDetails((prev) => !prev)
-            if (onShow) onShow()
-          }}
+          onClick={() => setShowDetails((prev) => !prev)}
         >
           {showDetails ? 'Hide' : 'Show'}
         </button>
         <button
           type="button"
           className="dictation__button"
-          onClick={onNext}
+          onClick={handleNext}
           disabled={isNextDisabled}
         >
           Next

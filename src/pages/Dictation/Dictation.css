@@ -98,6 +98,12 @@
   margin-top: 1.5rem;
 }
 
+.dictation__empty {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #666;
+}
+
 .dictation__button {
   padding: 0.6rem 1.25rem;
   border: none;
