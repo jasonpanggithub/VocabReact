@@ -1,7 +1,7 @@
 import List from '../pages/List/List'
 import Add from '../pages/Add/Add'
-import ByDate from '../pages/Dictation/ByDate'
-import TNPlus from '../pages/Dictation/TNPlus'
+import ByDate from '../pages/Dictation/ByDate/ByDate'
+import TNPlus from '../pages/Dictation/TNPlus/TNPlus'
 import Edit from '../pages/Edit/Edit'
 
 const navItems = [

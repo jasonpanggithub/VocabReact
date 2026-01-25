@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from 'react'
 import './ByDate.css'
 import Calendar from './Calendar'
-import Dictation from './Dictation'
+import Dictation from '../component/Dictation'
 
 const API_BASE_URL = '/api'
 
