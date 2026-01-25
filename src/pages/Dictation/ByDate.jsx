@@ -27,6 +27,7 @@ function ByDate() {
   const [error, setError] = useState(null)
   const [vocabList, setVocabList] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [correctCount, setCorrectCount] = useState(0)
 
   useEffect(() => {
     const fetchAvailableDates = async () => {
@@ -70,6 +71,7 @@ function ByDate() {
         const list = Array.isArray(result) ? result : []
         setVocabList(list)
         setCurrentIndex(0)
+        setCorrectCount(0)
       } catch (err) {
         setError(err.message)
         setVocabList([])
@@ -88,6 +90,14 @@ function ByDate() {
 
   const handleNext = () => {
     setCurrentIndex((prev) => Math.min(prev + 1, vocabList.length - 1))
+  }
+
+  const handleCorrect = () => {
+    setCorrectCount((prev) => prev + 1)
+    setCurrentIndex((prev) => {
+      if (prev >= vocabList.length - 1) return prev
+      return prev + 1
+    })
   }
 
   const selectedLabel = selectedDate
@@ -129,7 +139,8 @@ function ByDate() {
               example={currentVocab?.example}
               total={vocabList.length}
               current={vocabList.length ? currentIndex + 1 : 0}
-              correct={0}
+              correct={correctCount}
+              onCorrect={handleCorrect}
               onNext={handleNext}
               isNextDisabled={isNextDisabled}
             />

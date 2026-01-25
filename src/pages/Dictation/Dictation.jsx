@@ -1,5 +1,12 @@
-﻿import { useEffect, useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import './Dictation.css'
+
+const handlePlay = (saySomething) => {
+  if (!window.responsiveVoice || typeof window.responsiveVoice.speak !== 'function') {
+    return
+  }
+  window.responsiveVoice.speak(saySomething)
+}
 
 function Dictation({
   spelling,
@@ -11,14 +18,39 @@ function Dictation({
   correct = 0,
   onShow,
   onNext,
+  onCorrect,
   isNextDisabled = false,
 }) {
   const [spellingInput, setSpellingInput] = useState('')
   const [showDetails, setShowDetails] = useState(false)
+  const [hasMatched, setHasMatched] = useState(false)
+  const lastSpokenRef = useRef(null)
   
   useEffect(() => {
     setSpellingInput('')
+    setHasMatched(false)
   }, [pronunciation, definition, example])
+
+  useEffect(() => {
+    if (!spelling) return
+    if (lastSpokenRef.current === spelling) return
+    handlePlay(spelling)
+    lastSpokenRef.current = spelling
+  }, [spelling])
+
+  const handleSpellingSubmit = (event) => {
+    event.preventDefault()
+    if (hasMatched) return
+    const expected = (spelling || '').trim()
+    const actual = spellingInput.trim()
+    if (!expected || !actual) return
+    if (expected === actual) {
+      setHasMatched(true)
+      if (onCorrect) onCorrect()
+    } else {
+      handlePlay('wrong')
+    }
+  }
 
   
   return (
@@ -39,7 +71,7 @@ function Dictation({
       </div>
 
       <div className="dictation__fields">
-        <div className="dictation__field">
+        <form className="dictation__field" onSubmit={handleSpellingSubmit}>
           <label htmlFor="spelling">Spelling</label>
           <input
             id="spelling"
@@ -47,7 +79,7 @@ function Dictation({
             value={spellingInput}
             onChange={(event) => setSpellingInput(event.target.value)}
           />
-        </div>
+        </form>
         {showDetails && (
           <>
             <div className="dictation__field">
@@ -104,9 +136,3 @@ function Dictation({
 }
 
 export default Dictation
-  
-
-const handlePlay = (saySomething) => {
-    //responsiveVoice.speak(spellingInput, "UK English Male");
-    responsiveVoice.speak(saySomething)
-}
