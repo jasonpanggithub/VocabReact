@@ -16,6 +16,8 @@ function Dictation({ vocabList = [] }) {
   const [spellingInput, setSpellingInput] = useState('')
   const [showDetails, setShowDetails] = useState(false)
   const [hasMatched, setHasMatched] = useState(false)
+  const [showAnswer, setShowAnswer] = useState(false)
+  const [spellingDisabled, setSpellingDisabled] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [isSaveDisabled, setIsSaveDisabled] = useState(false)
@@ -24,7 +26,6 @@ function Dictation({ vocabList = [] }) {
   const total = vocabListState.length
   const currentVocab = vocabListState[currentIndex] || null
   const isNextDisabled = currentIndex >= vocabListState.length - 1
-  
 
   useEffect(() => {
     const spelling = currentVocab?.spelling
@@ -33,6 +34,7 @@ function Dictation({ vocabList = [] }) {
     handlePlay(spelling)
     lastSpokenRef.current = spelling
   }, [currentVocab?.spelling])
+
 
   const handleSpellingSubmit = (event) => {
     event.preventDefault()
@@ -88,6 +90,29 @@ function Dictation({ vocabList = [] }) {
     setCurrentIndex((prev) => Math.min(prev + 1, vocabListState.length - 1))
     setSpellingInput('')
     setHasMatched(false)
+    setShowAnswer(false)
+    setSpellingDisabled(false)
+  }
+
+  const handleAnswer = () => {
+    if (showAnswer) return
+    const now = new Date().toISOString()
+    setVocabListState((prev) =>
+      prev.map((item, idx) =>
+        idx === currentIndex
+          ? {
+              ...item,
+              attempt: (item.attempt || 0) + 1,
+              failTotal: (item.failTotal || 0) + 1,
+              lastAttempt: now,
+              lastFail: now,
+              lastResult: 'FAIL',
+            }
+          : item
+      )
+    )
+    setShowAnswer(true)
+    setSpellingDisabled(true)
   }
 
   const handleSave = async () => {
@@ -162,8 +187,15 @@ function Dictation({ vocabList = [] }) {
             type="text"
             value={spellingInput}
             onChange={(event) => setSpellingInput(event.target.value)}
+            disabled={spellingDisabled}
           />
         </form>
+        {showAnswer && (
+          <div className="dictation__answer">
+            <span className="dictation__answer-label">Answer</span>
+            <span className="dictation__answer-value">{currentVocab.spelling}</span>
+          </div>
+        )}
         {showDetails && (
           <>
             <div className="dictation__field">
@@ -195,6 +227,13 @@ function Dictation({ vocabList = [] }) {
           onClick={() => handlePlay(currentVocab.spelling)}
         >
           Play
+        </button>
+        <button
+          type="button"
+          className="dictation__button"
+          onClick={handleAnswer}
+        >
+          Answer
         </button>
         <button
           type="button"
