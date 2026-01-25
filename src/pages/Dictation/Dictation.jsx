@@ -9,7 +9,6 @@ function Dictation({
   total = 0,
   current = 0,
   correct = 0,
-  onCheck,
   onShow,
   onNext,
   isNextDisabled = false,
@@ -80,9 +79,6 @@ function Dictation({
           onClick={() => handlePlay(spelling)}
         >
           Play
-        </button>
-        <button type="button" className="dictation__button" onClick={onCheck}>
-          Check
         </button>
         <button
           type="button"
