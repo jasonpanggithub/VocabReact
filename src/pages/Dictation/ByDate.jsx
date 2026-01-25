@@ -123,6 +123,7 @@ function ByDate() {
             <div className="bydate__loading">Loading vocabularies...</div>
           ) : (
             <Dictation
+              spelling={currentVocab?.spelling}
               pronunciation={currentVocab?.pronunciation}
               definition={currentVocab?.definition}
               example={currentVocab?.example}

@@ -2,13 +2,13 @@
 import './Dictation.css'
 
 function Dictation({
+  spelling,
   pronunciation,
   definition,
   example,
   total = 0,
   current = 0,
   correct = 0,
-  onPlay,
   onCheck,
   onShow,
   onNext,
@@ -77,7 +77,7 @@ function Dictation({
         <button
           type="button"
           className="dictation__button"
-          onClick={onPlay}
+          onClick={() => handlePlay(spelling)}
         >
           Play
         </button>
@@ -108,3 +108,9 @@ function Dictation({
 }
 
 export default Dictation
+  
+
+const handlePlay = (saySomething) => {
+    //responsiveVoice.speak(spellingInput, "UK English Male");
+    responsiveVoice.speak(saySomething)
+}
