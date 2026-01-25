@@ -10,16 +10,21 @@ const handlePlay = (saySomething) => {
 }
 
 function Dictation({ vocabList = [] }) {
+  const [vocabListState, setVocabListState] = useState(() => vocabList)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [correctCount, setCorrectCount] = useState(0)
   const [spellingInput, setSpellingInput] = useState('')
   const [showDetails, setShowDetails] = useState(false)
   const [hasMatched, setHasMatched] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(null)
+  const [isSaveDisabled, setIsSaveDisabled] = useState(false)
   const lastSpokenRef = useRef(null)
 
-  const total = vocabList.length
-  const currentVocab = vocabList[currentIndex] || null
-  const isNextDisabled = currentIndex >= vocabList.length - 1
+  const total = vocabListState.length
+  const currentVocab = vocabListState[currentIndex] || null
+  const isNextDisabled = currentIndex >= vocabListState.length - 1
+  
 
   useEffect(() => {
     const spelling = currentVocab?.spelling
@@ -31,11 +36,26 @@ function Dictation({ vocabList = [] }) {
 
   const handleSpellingSubmit = (event) => {
     event.preventDefault()
+    const now = new Date().toISOString()
     const expected = (currentVocab?.spelling || '').trim()
     const actual = spellingInput.trim()
     if (!expected || !actual) return
     if (expected === actual) {
-      if (currentIndex >= vocabList.length - 1) {
+      setVocabListState((prev) =>
+        prev.map((item, idx) =>
+          idx === currentIndex
+            ? {
+                ...item,
+                attempt: (item.attempt || 0) + 1,
+                successTotal: (item.successTotal || 0) + 1,
+                lastAttempt: now,
+                lastCorrect: now,
+                lastResult: 'SUCCESS',
+              }
+            : item
+        )
+      )
+      if (currentIndex >= vocabListState.length - 1) {
         if (hasMatched) return
         setHasMatched(true)
         setCorrectCount((prev) => prev + 1)
@@ -46,14 +66,53 @@ function Dictation({ vocabList = [] }) {
       setSpellingInput('')
       setHasMatched(false)
     } else {
+      setVocabListState((prev) =>
+        prev.map((item, idx) =>
+          idx === currentIndex
+            ? {
+                ...item,
+                attempt: (item.attempt || 0) + 1,
+                failTotal: (item.failTotal || 0) + 1,
+                lastAttempt: now,
+                lastFail: now,
+                lastResult: 'FAIL',
+              }
+            : item
+        )
+      )
       handlePlay('wrong')
     }
   }
 
   const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(prev + 1, vocabList.length - 1))
+    setCurrentIndex((prev) => Math.min(prev + 1, vocabListState.length - 1))
     setSpellingInput('')
     setHasMatched(false)
+  }
+
+  const handleSave = async () => {
+    if (saving) return
+    setSaving(true)
+    setSaveError(null)
+    try {
+      const response = await fetch('/api/Vocabularies/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(vocabListState),
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to save (${response.status})`)
+      } else {
+        setIsSaveDisabled(true)
+        handlePlay('save successfully')
+      }
+    } catch (err) {
+      setSaveError(err.message)
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (!currentVocab) {
@@ -152,7 +211,16 @@ function Dictation({ vocabList = [] }) {
         >
           Next
         </button>
+        <button
+          type="button"
+          className="dictation__button"
+          onClick={handleSave}
+          disabled={saving || isSaveDisabled}
+        >
+          {saving ? 'Saving...' : 'Save'}
+        </button>
       </div>
+      {saveError && <div className="dictation__error">Error: {saveError}</div>}
     </div>
   )
 }

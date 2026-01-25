@@ -104,6 +104,12 @@
   color: #666;
 }
 
+.dictation__error {
+  margin-top: 1rem;
+  color: #d32f2f;
+  text-align: right;
+}
+
 .dictation__button {
   padding: 0.6rem 1.25rem;
   border: none;
