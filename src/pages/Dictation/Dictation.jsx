@@ -22,18 +22,6 @@ function Dictation({ vocabList = [] }) {
   const isNextDisabled = currentIndex >= vocabList.length - 1
 
   useEffect(() => {
-    setCurrentIndex(0)
-    setCorrectCount(0)
-    setSpellingInput('')
-    setHasMatched(false)
-  }, [vocabList])
-
-  useEffect(() => {
-    setSpellingInput('')
-    setHasMatched(false)
-  }, [currentVocab?.spelling])
-
-  useEffect(() => {
     const spelling = currentVocab?.spelling
     if (!spelling) return
     if (lastSpokenRef.current === spelling) return
@@ -43,16 +31,20 @@ function Dictation({ vocabList = [] }) {
 
   const handleSpellingSubmit = (event) => {
     event.preventDefault()
-    if (hasMatched) return
     const expected = (currentVocab?.spelling || '').trim()
     const actual = spellingInput.trim()
     if (!expected || !actual) return
     if (expected === actual) {
-      setHasMatched(true)
-      setCorrectCount((prev) => prev + 1)
-      if (currentIndex < vocabList.length - 1) {
-        setCurrentIndex((prev) => prev + 1)
+      if (currentIndex >= vocabList.length - 1) {
+        if (hasMatched) return
+        setHasMatched(true)
+        setCorrectCount((prev) => prev + 1)
+        return
       }
+      setCorrectCount((prev) => prev + 1)
+      setCurrentIndex((prev) => prev + 1)
+      setSpellingInput('')
+      setHasMatched(false)
     } else {
       handlePlay('wrong')
     }
@@ -60,6 +52,8 @@ function Dictation({ vocabList = [] }) {
 
   const handleNext = () => {
     setCurrentIndex((prev) => Math.min(prev + 1, vocabList.length - 1))
+    setSpellingInput('')
+    setHasMatched(false)
   }
 
   if (!currentVocab) {

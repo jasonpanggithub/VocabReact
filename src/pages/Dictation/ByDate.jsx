@@ -93,6 +93,8 @@ function ByDate() {
       })
     : 'No date selected'
 
+  const selectedDateKey = selectedDate ? toDateKey(selectedDate) : null
+
   return (
     <div className="bydate">
       <h1>Dictation by Date</h1>
@@ -113,7 +115,10 @@ function ByDate() {
           {loading ? (
             <div className="bydate__loading">Loading vocabularies...</div>
           ) : (
-            <Dictation vocabList={vocabList} />
+            <Dictation
+              key={selectedDateKey ? `${selectedDateKey}-${vocabList.length}` : 'dictation'}
+              vocabList={vocabList}
+            />
           )}
         </>
       ) : (
