@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './VocabularyTable.css'
 import Pagination from '../Pagination/Pagination'
-
-const API_BASE_URL = '/api'
+import { API_BASE_URL } from '../../../config/api'
 const PAGE_LENGTH = 5
 
 function VocabularyTable() {
@@ -144,7 +143,7 @@ function VocabularyTable() {
               <tr key={vocab.id} className="vocabulary-table__row">
                 <td className="vocabulary-table__cell">{vocab.spelling}</td>
                 <td className="vocabulary-table__cell">
-                  {vocab.pronunciation || '—'}
+                  {vocab.pronunciation || 'â€”'}
                 </td>
                 <td className="vocabulary-table__cell">{vocab.definition}</td>
                 <td className="vocabulary-table__cell">
@@ -189,3 +188,4 @@ function VocabularyTable() {
 }
 
 export default VocabularyTable
+

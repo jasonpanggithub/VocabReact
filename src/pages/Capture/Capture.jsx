@@ -2,7 +2,7 @@
 import NewWord from './NewWord'
 import './Capture.css'
 
-const API_BASE_URL = '/api'
+import { API_BASE_URL } from '../../config/api'
 
 function Capture() {
   const [text, setText] = useState('')
@@ -135,3 +135,4 @@ function Capture() {
 }
 
 export default Capture
+

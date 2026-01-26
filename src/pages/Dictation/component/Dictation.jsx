@@ -9,8 +9,7 @@ const handlePlay = (saySomething) => {
   window.responsiveVoice.speak(saySomething)
 }
 
-function Dictation({ vocabList = [] }) {
-  const [vocabListState, setVocabListState] = useState(() => vocabList)
+function Dictation({ vocabList = [], onUpdateList }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [correctCount, setCorrectCount] = useState(0)
   const [spellingInput, setSpellingInput] = useState('')
@@ -23,9 +22,9 @@ function Dictation({ vocabList = [] }) {
   const [isSaveDisabled, setIsSaveDisabled] = useState(false)
   const lastSpokenRef = useRef(null)
 
-  const total = vocabListState.length
-  const currentVocab = vocabListState[currentIndex] || null
-  const isNextDisabled = currentIndex >= vocabListState.length - 1
+  const total = vocabList.length
+  const currentVocab = vocabList[currentIndex] || null
+  const isNextDisabled = currentIndex >= vocabList.length - 1
 
   useEffect(() => {
     const spelling = currentVocab?.spelling
@@ -43,21 +42,23 @@ function Dictation({ vocabList = [] }) {
     const actual = spellingInput.trim()
     if (!expected || !actual) return
     if (expected === actual) {
-      setVocabListState((prev) =>
-        prev.map((item, idx) =>
-          idx === currentIndex
-            ? {
-                ...item,
-                attempt: (item.attempt || 0) + 1,
-                successTotal: (item.successTotal || 0) + 1,
-                lastAttempt: now,
-                lastCorrect: now,
-                lastResult: 'SUCCESS',
-              }
-            : item
+      if (onUpdateList) {
+        onUpdateList((prev) =>
+          prev.map((item, idx) =>
+            idx === currentIndex
+              ? {
+                  ...item,
+                  attempt: (item.attempt || 0) + 1,
+                  successTotal: (item.successTotal || 0) + 1,
+                  lastAttempt: now,
+                  lastCorrect: now,
+                  lastResult: 'SUCCESS',
+                }
+              : item
+          )
         )
-      )
-      if (currentIndex >= vocabListState.length - 1) {
+      }
+      if (currentIndex >= vocabList.length - 1) {
         if (hasMatched) return
         setHasMatched(true)
         setCorrectCount((prev) => prev + 1)
@@ -68,7 +69,39 @@ function Dictation({ vocabList = [] }) {
       setSpellingInput('')
       setHasMatched(false)
     } else {
-      setVocabListState((prev) =>
+      if (onUpdateList) {
+        onUpdateList((prev) =>
+          prev.map((item, idx) =>
+            idx === currentIndex
+              ? {
+                  ...item,
+                  attempt: (item.attempt || 0) + 1,
+                  failTotal: (item.failTotal || 0) + 1,
+                  lastAttempt: now,
+                  lastFail: now,
+                  lastResult: 'FAIL',
+                }
+              : item
+          )
+        )
+      }
+      handlePlay('wrong')
+    }
+  }
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => Math.min(prev + 1, vocabList.length - 1))
+    setSpellingInput('')
+    setHasMatched(false)
+    setShowAnswer(false)
+    setSpellingDisabled(false)
+  }
+
+  const handleAnswer = () => {
+    if (showAnswer) return
+    const now = new Date().toISOString()
+    if (onUpdateList) {
+      onUpdateList((prev) =>
         prev.map((item, idx) =>
           idx === currentIndex
             ? {
@@ -82,35 +115,7 @@ function Dictation({ vocabList = [] }) {
             : item
         )
       )
-      handlePlay('wrong')
     }
-  }
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(prev + 1, vocabListState.length - 1))
-    setSpellingInput('')
-    setHasMatched(false)
-    setShowAnswer(false)
-    setSpellingDisabled(false)
-  }
-
-  const handleAnswer = () => {
-    if (showAnswer) return
-    const now = new Date().toISOString()
-    setVocabListState((prev) =>
-      prev.map((item, idx) =>
-        idx === currentIndex
-          ? {
-              ...item,
-              attempt: (item.attempt || 0) + 1,
-              failTotal: (item.failTotal || 0) + 1,
-              lastAttempt: now,
-              lastFail: now,
-              lastResult: 'FAIL',
-            }
-          : item
-      )
-    )
     setShowAnswer(true)
     setSpellingDisabled(true)
   }
@@ -125,7 +130,7 @@ function Dictation({ vocabList = [] }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(vocabListState),
+        body: JSON.stringify(vocabList),
       })
       if (!response.ok) {
         throw new Error(`Failed to save (${response.status})`)

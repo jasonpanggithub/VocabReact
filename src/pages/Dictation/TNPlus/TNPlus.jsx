@@ -1,7 +1,6 @@
 ﻿import { useEffect, useState } from 'react'
 import Dictation from '../component/Dictation'
-
-const API_BASE_URL = '/api'
+import { API_BASE_URL } from '../../../config/api'
 
 function TNPlus() {
   const [vocabList, setVocabList] = useState([])
@@ -36,9 +35,16 @@ function TNPlus() {
       <h1 style={{ textAlign: 'center' }}>Dictation TN+</h1>
       {loading && <div style={{ textAlign: 'center' }}>Loading...</div>}
       {error && <div style={{ textAlign: 'center' }}>Error: {error}</div>}
-      {!loading && !error && <Dictation vocabList={vocabList} />}
+      {!loading && !error && (
+        <Dictation
+          key={`tnplus-${vocabList.length}`}
+          vocabList={vocabList}
+          onUpdateList={setVocabList}
+        />
+      )}
     </div>
   )
 }
 
 export default TNPlus
+

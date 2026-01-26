@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import './Edit.css'
 
-const API_BASE_URL = '/api'
+import { API_BASE_URL } from '../../config/api'
 
 function Edit() {
   const { id } = useParams()
@@ -263,3 +263,4 @@ function Edit() {
 }
 
 export default Edit
+

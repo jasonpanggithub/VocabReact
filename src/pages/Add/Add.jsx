@@ -2,7 +2,7 @@
 import { useNavigate } from 'react-router-dom'
 import './Add.css'
 
-const API_BASE_URL = '/api'
+import { API_BASE_URL } from '../../config/api'
 
 const initialForm = {
   spelling: '',
@@ -136,3 +136,4 @@ function Add() {
 }
 
 export default Add
+

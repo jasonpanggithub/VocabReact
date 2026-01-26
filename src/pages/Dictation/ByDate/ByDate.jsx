@@ -2,8 +2,7 @@
 import './ByDate.css'
 import Calendar from './Calendar'
 import Dictation from '../component/Dictation'
-
-const API_BASE_URL = '/api'
+import { API_BASE_URL } from '../../../config/api'
 
 function toDateKey(date) {
   const year = date.getFullYear()
@@ -118,6 +117,7 @@ function ByDate() {
             <Dictation
               key={selectedDateKey ? `${selectedDateKey}-${vocabList.length}` : 'dictation'}
               vocabList={vocabList}
+              onUpdateList={setVocabList}
             />
           )}
         </>
@@ -133,3 +133,4 @@ function ByDate() {
 }
 
 export default ByDate
+
