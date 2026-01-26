@@ -110,7 +110,7 @@ function Capture() {
         </button>
         <button
           type="button"
-          className="capture__button capture__button--secondary"
+          className="capture__button"
           onClick={handleSave}
           disabled={saving || result.length === 0}
         >

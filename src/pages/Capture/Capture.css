@@ -37,13 +37,6 @@
   cursor: not-allowed;
 }
 
-.capture__button--secondary {
-  background: #4b5563;
-}
-
-.capture__button--secondary:disabled {
-  background: #c0c4cc;
-}
 
 .capture__error {
   margin-top: 0.75rem;
