@@ -1,5 +1,6 @@
 import List from '../pages/List/List'
 import Add from '../pages/Add/Add'
+import Capture from '../pages/Capture/Capture'
 import ByDate from '../pages/Dictation/ByDate/ByDate'
 import TNPlus from '../pages/Dictation/TNPlus/TNPlus'
 import Edit from '../pages/Edit/Edit'
@@ -7,6 +8,7 @@ import Edit from '../pages/Edit/Edit'
 const navItems = [
   { path: '/list', label: 'List', element: <List /> },
   { path: '/add', label: 'Add', element: <Add /> },
+  { path: '/capture', label: 'Capture', element: <Capture /> },
   {
     label: 'Dictation',
     children: [
