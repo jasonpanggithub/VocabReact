@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
-import './Pagination.css'
+﻿import { useEffect, useMemo, useState } from 'react'
 
 function Pagination({ currentPage, totalPages, onPageChange }) {
   const [jumpInput, setJumpInput] = useState(String(currentPage))
@@ -56,71 +55,78 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
   const pageNumbers = getPageNumbers()
 
   return (
-    <div className="pagination">
-      <button
-        className="pagination__button pagination__button--prev"
-        onClick={handlePrevious}
-        disabled={currentPage === 1}
-        aria-label="Previous page"
-      >
-        Previous
-      </button>
+    <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <nav aria-label="Vocabulary pagination">
+        <ul className="pagination mb-0">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <button className="page-link bg-dark text-light border-secondary" onClick={handlePrevious}>
+              Previous
+            </button>
+          </li>
 
-      {pageNumbers[0] > 1 && (
-        <>
-          <button
-            className="pagination__page-num"
-            onClick={() => handlePageClick(1)}
-          >
-            1
-          </button>
-          {pageNumbers[0] > 2 && <span className="pagination__ellipsis">...</span>}
-        </>
-      )}
-
-      {pageNumbers.map((pageNum) => (
-        <button
-          key={pageNum}
-          className={`pagination__page-num ${
-            pageNum === currentPage ? 'pagination__page-num--active' : ''
-          }`}
-          onClick={() => handlePageClick(pageNum)}
-          aria-current={pageNum === currentPage ? 'page' : undefined}
-        >
-          {pageNum}
-        </button>
-      ))}
-
-      {pageNumbers[pageNumbers.length - 1] < totalPages && (
-        <>
-          {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-            <span className="pagination__ellipsis">...</span>
+          {pageNumbers[0] > 1 && (
+            <>
+              <li className="page-item">
+                <button className="page-link bg-dark text-light border-secondary" onClick={() => handlePageClick(1)}>
+                  1
+                </button>
+              </li>
+              {pageNumbers[0] > 2 && (
+                <li className="page-item disabled">
+                  <span className="page-link bg-dark text-light border-secondary">...</span>
+                </li>
+              )}
+            </>
           )}
-          <button
-            className="pagination__page-num"
-            onClick={() => handlePageClick(totalPages)}
-          >
-            {totalPages}
-          </button>
-        </>
-      )}
 
-      <button
-        className="pagination__button pagination__button--next"
-        onClick={handleNext}
-        disabled={currentPage === totalPages}
-        aria-label="Next page"
-      >
-        Next
-      </button>
+          {pageNumbers.map((pageNum) => (
+            <li
+              key={pageNum}
+              className={`page-item ${pageNum === currentPage ? 'active' : ''}`}
+            >
+              <button
+                className="page-link bg-dark text-light border-secondary"
+                onClick={() => handlePageClick(pageNum)}
+                aria-current={pageNum === currentPage ? 'page' : undefined}
+              >
+                {pageNum}
+              </button>
+            </li>
+          ))}
 
-      <form className="pagination__jump" onSubmit={handleJump}>
-        <label className="pagination__jump-label" htmlFor="pagination-jump">
+          {pageNumbers[pageNumbers.length - 1] < totalPages && (
+            <>
+              {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
+                <li className="page-item disabled">
+                  <span className="page-link bg-dark text-light border-secondary">...</span>
+                </li>
+              )}
+              <li className="page-item">
+                <button
+                  className="page-link bg-dark text-light border-secondary"
+                  onClick={() => handlePageClick(totalPages)}
+                >
+                  {totalPages}
+                </button>
+              </li>
+            </>
+          )}
+
+          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <button className="page-link bg-dark text-light border-secondary" onClick={handleNext}>
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <form className="d-flex align-items-center gap-2" onSubmit={handleJump}>
+        <label className="form-label m-0" htmlFor="pagination-jump">
           Jump to
         </label>
         <input
           id="pagination-jump"
-          className="pagination__jump-input"
+          className="form-control form-control-sm bg-dark text-light border-secondary"
           type="number"
           min="1"
           max={totalPages}
@@ -128,12 +134,9 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
           value={jumpInput}
           onChange={(event) => setJumpInput(event.target.value)}
           aria-label="Jump to page"
+          style={{ width: '5rem' }}
         />
-        <button
-          className="pagination__button pagination__button--jump"
-          type="submit"
-          disabled={jumpTarget == null}
-        >
+        <button className="btn btn-sm btn-outline-light" type="submit" disabled={jumpTarget == null}>
           Go
         </button>
       </form>

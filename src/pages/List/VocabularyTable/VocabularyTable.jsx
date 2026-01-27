@@ -1,8 +1,8 @@
 ﻿import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import './VocabularyTable.css'
 import Pagination from '../Pagination/Pagination'
 import { API_BASE_URL } from '../../../config/api'
+
 const PAGE_LENGTH = 5
 
 function VocabularyTable() {
@@ -98,12 +98,10 @@ function VocabularyTable() {
       if (!response.ok) {
         throw new Error(`Failed to delete vocabulary (${response.status})`)
       }
-      if (isSearching) {
-        const trimmed = searchTerm.trim()
-        if (trimmed) {
-          await searchVocabulary(trimmed, currentPage)
-          return
-        }
+      const trimmed = searchTerm.trim()
+      if (trimmed) {
+        await searchVocabulary(trimmed, currentPage)
+        return
       }
       const nextPage =
         data.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage
@@ -115,78 +113,77 @@ function VocabularyTable() {
     }
   }
 
-  if (loading) return <div className="vocabulary-table__loading">Loading...</div>
-  if (error) return <div className="vocabulary-table__error">Error: {error}</div>
+  if (loading) return <div className="text-center py-4">Loading...</div>
+  if (error) return <div className="text-center text-danger py-4">Error: {error}</div>
 
   return (
-    <div className="vocabulary-table">
-      <form className="vocabulary-table__header-row" onSubmit={handleSearchSubmit}>
-        <h2 className="vocabulary-table__title">Vocabulary List</h2>
-        <div className="vocabulary-table__search-controls">
-          
-            
-            <input
-              className="vocabulary-table__search-input"
-              type="text"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Type a term..."
-              aria-label="Search vocabulary"
-            />
-          
-          <button className="vocabulary-table__search-button" type="submit">
+    <div className="container py-3">
+      <div className="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
+        <h2 className="h4 m-0">Vocabulary List</h2>
+        <form className="d-flex gap-2" onSubmit={handleSearchSubmit}>
+          <input
+            className="form-control bg-dark text-light border-secondary"
+            type="text"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Type a term..."
+            aria-label="Search vocabulary"
+          />
+          <button className="btn btn-primary" type="submit">
             Search
           </button>
-        </div>
-      </form>
-      <table className="vocabulary-table__data">
-        <thead>
-          <tr>
-            <th className="vocabulary-table__header">Spelling</th>
-            <th className="vocabulary-table__header">Pronunciation</th>
-            <th className="vocabulary-table__header">Definition</th>
-            <th className="vocabulary-table__header">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.length > 0 ? (
-            data.map((vocab) => (
-              <tr key={vocab.id} className="vocabulary-table__row">
-                <td className="vocabulary-table__cell">{vocab.spelling}</td>
-                <td className="vocabulary-table__cell">
-                  {vocab.pronunciation || 'â€”'}
-                </td>
-                <td className="vocabulary-table__cell">{vocab.definition}</td>
-                <td className="vocabulary-table__cell">
-                  <Link
-                    to={`/edit/${vocab.id}`}
-                    className="vocabulary-table__action-link vocabulary-table__action-link--icon"
-                    aria-label={`Edit ${vocab.spelling}`}
-                    title="Edit"
-                  >
-                    &#9998;
-                  </Link>
-                  <button
-                    type="button"
-                    className="vocabulary-table__delete-button"
-                    onClick={() => handleDelete(vocab.id)}
-                    aria-label={`Delete ${vocab.spelling}`}
-                    title="Delete"
-                  >
-                    &times;
-                  </button>
+        </form>
+      </div>
+
+      <div className="table-responsive">
+        <table className="table table-dark table-striped table-hover align-middle">
+          <thead>
+            <tr>
+              <th>Spelling</th>
+              <th>Pronunciation</th>
+              <th>Definition</th>
+              <th className="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.length > 0 ? (
+              data.map((vocab) => (
+                <tr key={vocab.id}>
+                  <td>{vocab.spelling}</td>
+                  <td>{vocab.pronunciation || '—'}</td>
+                  <td>{vocab.definition}</td>
+                  <td className="text-end">
+                    <Link
+                      to={`/edit/${vocab.id}`}
+                      className="btn btn-sm btn-outline-light me-2"
+                      aria-label={`Edit ${vocab.spelling}`}
+                      title="Edit"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-danger"
+                      onClick={() => handleDelete(vocab.id)}
+                      aria-label={`Delete ${vocab.spelling}`}
+                      title="Delete"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center text-muted py-4">
+                  No vocabulary data available
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="vocabulary-table__empty">
-                No vocabulary data available
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
+
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -197,4 +194,3 @@ function VocabularyTable() {
 }
 
 export default VocabularyTable
-

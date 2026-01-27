@@ -1,7 +1,5 @@
 ﻿import { useState } from 'react'
 import NewWord from './NewWord'
-import './Capture.css'
-
 import { API_BASE_URL } from '../../config/api'
 
 function Capture() {
@@ -90,19 +88,19 @@ function Capture() {
   }
 
   return (
-    <div className="capture">
-      <h1 className="capture__title">Capture</h1>
+    <div className="container py-3">
+      <h1 className="text-center mb-3">Capture</h1>
       <textarea
-        className="capture__textarea"
+        className="form-control bg-dark text-light border-secondary mb-3"
         value={text}
         onChange={(event) => setText(event.target.value)}
         placeholder="Paste or type vocabularies here..."
         rows="10"
       />
-      <div className="capture__actions">
+      <div className="d-flex gap-2 mb-3">
         <button
           type="button"
-          className="capture__button"
+          className="btn btn-primary"
           onClick={handleSubmit}
           disabled={loading}
         >
@@ -110,17 +108,17 @@ function Capture() {
         </button>
         <button
           type="button"
-          className="capture__button"
+          className="btn btn-secondary"
           onClick={handleSave}
           disabled={saving || result.length === 0}
         >
           {saving ? 'Saving...' : 'Save'}
         </button>
       </div>
-      {error && <div className="capture__error">Error: {error}</div>}
-      {saveError && <div className="capture__error">Error: {saveError}</div>}
+      {error && <div className="text-danger mb-2">Error: {error}</div>}
+      {saveError && <div className="text-danger mb-2">Error: {saveError}</div>}
       {Array.isArray(result) && result.length > 0 && (
-        <div className="capture__result">
+        <div className="d-flex flex-column gap-2">
           {result.map((item, index) => (
             <NewWord
               key={item.id || item.spelling || index}
@@ -135,4 +133,3 @@ function Capture() {
 }
 
 export default Capture
-

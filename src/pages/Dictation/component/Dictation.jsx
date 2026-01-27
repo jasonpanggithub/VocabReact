@@ -1,4 +1,5 @@
 ﻿import { useEffect, useRef, useState } from 'react'
+import { API_BASE_URL } from '../../../config/api'
 import './Dictation.css'
 
 const handlePlay = (saySomething) => {
@@ -33,7 +34,6 @@ function Dictation({ vocabList = [], onUpdateList }) {
     handlePlay(spelling)
     lastSpokenRef.current = spelling
   }, [currentVocab?.spelling])
-
 
   const handleSpellingSubmit = (event) => {
     event.preventDefault()
@@ -125,7 +125,7 @@ function Dictation({ vocabList = [], onUpdateList }) {
     setSaving(true)
     setSaveError(null)
     try {
-      const response = await fetch('/api/Vocabularies/save', {
+      const response = await fetch(`${API_BASE_URL}/Vocabularies/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,10 +134,9 @@ function Dictation({ vocabList = [], onUpdateList }) {
       })
       if (!response.ok) {
         throw new Error(`Failed to save (${response.status})`)
-      } else {
-        setIsSaveDisabled(true)
-        handlePlay('save successfully')
       }
+      setIsSaveDisabled(true)
+      handlePlay('save successfully')
     } catch (err) {
       setSaveError(err.message)
     } finally {
@@ -147,109 +146,108 @@ function Dictation({ vocabList = [], onUpdateList }) {
 
   if (!currentVocab) {
     return (
-      <div className="dictation">
-        <div className="dictation__stats">
-          <div className="dictation__stat">
-            <span className="dictation__label">Total</span>
-            <span className="dictation__value">0</span>
+      <div className="card bg-dark text-light border-secondary p-3">
+        <div className="row g-2 text-center">
+          <div className="col-sm">
+            <div className="fw-semibold">Total</div>
+            <div>0</div>
           </div>
-          <div className="dictation__stat">
-            <span className="dictation__label">Current</span>
-            <span className="dictation__value">0</span>
+          <div className="col-sm">
+            <div className="fw-semibold">Current</div>
+            <div>0</div>
           </div>
-          <div className="dictation__stat">
-            <span className="dictation__label">Correct</span>
-            <span className="dictation__value">0</span>
+          <div className="col-sm">
+            <div className="fw-semibold">Correct</div>
+            <div>0</div>
           </div>
         </div>
-        <div className="dictation__empty">No vocabularies available.</div>
+        <div className="text-center text-muted mt-3">No vocabularies available.</div>
       </div>
     )
   }
 
   return (
-    <div className="dictation">
-      <div className="dictation__stats">
-        <div className="dictation__stat">
-          <span className="dictation__label">Total</span>
-          <span className="dictation__value">{total}</span>
+    <div className="card bg-dark text-light border-secondary p-3">
+      <div className="row g-2 text-center mb-3">
+        <div className="col-sm">
+          <div className="fw-semibold">Total</div>
+          <div>{total}</div>
         </div>
-        <div className="dictation__stat">
-          <span className="dictation__label">Current</span>
-          <span className="dictation__value">{currentIndex + 1}</span>
+        <div className="col-sm">
+          <div className="fw-semibold">Current</div>
+          <div>{currentIndex + 1}</div>
         </div>
-        <div className="dictation__stat">
-          <span className="dictation__label">Correct</span>
-          <span className="dictation__value">{correctCount}</span>
+        <div className="col-sm">
+          <div className="fw-semibold">Correct</div>
+          <div>{correctCount}</div>
         </div>
       </div>
 
-      <div className="dictation__fields">
-        <form className="dictation__field" onSubmit={handleSpellingSubmit}>
-          <label htmlFor="spelling">Spelling</label>
+      <form className="row g-2 align-items-center mb-2" onSubmit={handleSpellingSubmit}>
+        <div className="col-sm-3 text-start">
+          <label htmlFor="spelling" className="col-form-label">
+            Spelling
+          </label>
+        </div>
+        <div className="col-sm-9 text-start">
           <input
             id="spelling"
             type="text"
+            className="form-control bg-dark text-light border-secondary"
             value={spellingInput}
             onChange={(event) => setSpellingInput(event.target.value)}
             disabled={spellingDisabled}
           />
-        </form>
-        {showAnswer && (
-          <div className="dictation__answer">
-            <span className="dictation__answer-label">Answer</span>
-            <span className="dictation__answer-value">{currentVocab.spelling}</span>
-          </div>
-        )}
-        {showDetails && (
-          <>
-            <div className="dictation__field">
-              <label className="dictation__label-inline">Pronunciation</label>
-              <span className="dictation__readonly-value">
-                {currentVocab.pronunciation || '-'}
-              </span>
-            </div>
-            <div className="dictation__field">
-              <label className="dictation__label-inline">Definition</label>
-              <span className="dictation__readonly-value">
-                {currentVocab.definition || '-'}
-              </span>
-            </div>
-            <div className="dictation__field">
-              <label className="dictation__label-inline">Example</label>
-              <span className="dictation__readonly-value">
-                {currentVocab.example || '-'}
-              </span>
-            </div>
-          </>
-        )}
-      </div>
+        </div>
+      </form>
 
-      <div className="dictation__actions">
+      {showAnswer && (
+        <div className="row g-2 align-items-center mb-2">
+          <div className="col-sm-3 fw-semibold text-start">Answer</div>
+          <div className="col-sm-9 text-danger fw-semibold text-start">
+            {currentVocab.spelling}
+          </div>
+        </div>
+      )}
+
+      {showDetails && (
+        <div className="mb-3">
+          <div className="row g-2 align-items-center mb-2">
+            <div className="col-sm-3 fw-semibold text-start">Pronunciation</div>
+            <div className="col-sm-9 text-start">{currentVocab.pronunciation || '-'}</div>
+          </div>
+          <div className="row g-2 align-items-center mb-2">
+            <div className="col-sm-3 fw-semibold text-start">Definition</div>
+            <div className="col-sm-9 text-start">{currentVocab.definition || '-'}</div>
+          </div>
+          <div className="row g-2 align-items-center">
+            <div className="col-sm-3 fw-semibold text-start">Example</div>
+            <div className="col-sm-9 text-start">{currentVocab.example || '-'}</div>
+          </div>
+        </div>
+      )}
+
+      <div className="d-flex flex-wrap gap-2">
         <button
           type="button"
-          className="dictation__button"
+          className="btn btn-primary dictation__btn"
           onClick={() => handlePlay(currentVocab.spelling)}
         >
           Play
         </button>
-        <button
-          type="button"
-          className="dictation__button"
-          onClick={handleAnswer}
-        >
+        <button type="button" className="btn btn-primary dictation__btn" onClick={handleAnswer}>
           Answer
         </button>
         <button
           type="button"
-          className="dictation__button"
+          className="btn btn-primary dictation__btn"
           onClick={() => setShowDetails((prev) => !prev)}
         >
           {showDetails ? 'Hide' : 'Show'}
         </button>
         <button
           type="button"
-          className="dictation__button"
+          className="btn btn-primary dictation__btn"
           onClick={handleNext}
           disabled={isNextDisabled}
         >
@@ -257,14 +255,14 @@ function Dictation({ vocabList = [], onUpdateList }) {
         </button>
         <button
           type="button"
-          className="dictation__button"
+          className="btn btn-danger dictation__btn dictation__btn--save"
           onClick={handleSave}
           disabled={saving || isSaveDisabled}
         >
           {saving ? 'Saving...' : 'Save'}
         </button>
       </div>
-      {saveError && <div className="dictation__error">Error: {saveError}</div>}
+      {saveError && <div className="text-danger mt-2">Error: {saveError}</div>}
     </div>
   )
 }

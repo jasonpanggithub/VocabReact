@@ -1,7 +1,5 @@
 ﻿import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import './Edit.css'
-
 import { API_BASE_URL } from '../../config/api'
 
 function Edit() {
@@ -57,7 +55,6 @@ function Edit() {
       if (!response.ok) {
         throw new Error('Failed to save vocabulary data')
       }
-      console.log('Save successful')
       navigate('/list')
     } catch (err) {
       setError(err.message)
@@ -72,192 +69,209 @@ function Edit() {
 
   if (!id) {
     return (
-      <div className="edit-form">
-        <h1>Edit Vocabulary Entry</h1>
-        <p>Please choose a vocabulary item from the list to edit.</p>
-        <Link to="/list" className="btn btn-primary">
-          Go to List
-        </Link>
+      <div className="container py-4">
+        <div className="card bg-dark text-light border-secondary p-4 text-center">
+          <h1 className="h4">Edit Vocabulary Entry</h1>
+          <p>Please choose a vocabulary item from the list to edit.</p>
+          <Link to="/list" className="btn btn-primary">
+            Go to List
+          </Link>
+        </div>
       </div>
     )
   }
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
+  if (loading) return <div className="text-center py-4">Loading...</div>
+  if (error) return <div className="text-center text-danger py-4">Error: {error}</div>
   if (!vocab) return null
 
   const formatDateTime = (dateTimeString) => {
     if (!dateTimeString) return ''
-    return dateTimeString.slice(0, 16) // Format for datetime-local
+    return dateTimeString.slice(0, 16)
   }
 
   return (
-    <div className="edit-form">
-      <h1>Edit Vocabulary Entry</h1>
-      <form onSubmit={handleSave}>
-        <div className="form-group">
-          <label htmlFor="spelling">Spelling</label>
-          <input
-            type="text"
-            id="spelling"
-            name="spelling"
-            value={vocab.spelling || ''}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="stem">Stem</label>
-          <input
-            type="text"
-            id="stem"
-            name="stem"
-            value={vocab.stem || ''}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="pronunciation">Pronunciation</label>
-          <input
-            type="text"
-            id="pronunciation"
-            name="pronunciation"
-            value={vocab.pronunciation || ''}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="definition">Definition</label>
-          <input
-            type="text"
-            id="definition"
-            name="definition"
-            value={vocab.definition || ''}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="example">Example</label>
-          <textarea
-            id="example"
-            name="example"
-            rows="3"
-            value={vocab.example || ''}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-grid">
-          <div className="form-group">
-            <label htmlFor="attempt">Attempt</label>
-            <input
-              type="number"
-              id="attempt"
-              name="attempt"
-              value={vocab.attempt || 0}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="successTotal">Success Total</label>
-            <input
-              type="number"
-              id="successTotal"
-              name="successTotal"
-              value={vocab.successTotal || 0}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="failTotal">Fail Total</label>
-            <input
-              type="number"
-              id="failTotal"
-              name="failTotal"
-              value={vocab.failTotal || 0}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="needTest">Need Test</label>
+    <div className="container py-4">
+      <div className="card bg-dark text-light border-secondary p-4">
+        <h1 className="h4 mb-3">Edit Vocabulary Entry</h1>
+        <form onSubmit={handleSave} className="row g-3">
+          <div className="col-md-6">
+            <label htmlFor="spelling" className="form-label">Spelling</label>
             <input
               type="text"
-              id="needTest"
-              name="needTest"
-              value={vocab.needTest || ''}
+              id="spelling"
+              name="spelling"
+              className="form-control bg-dark text-light border-secondary"
+              value={vocab.spelling || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="lastResult">Last Result</label>
+          <div className="col-md-6">
+            <label htmlFor="stem" className="form-label">Stem</label>
             <input
               type="text"
-              id="lastResult"
-              name="lastResult"
-              value={vocab.lastResult || ''}
+              id="stem"
+              name="stem"
+              className="form-control bg-dark text-light border-secondary"
+              value={vocab.stem || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="createdDate">Created Date</label>
+          <div className="col-md-6">
+            <label htmlFor="pronunciation" className="form-label">Pronunciation</label>
             <input
-              type="datetime-local"
-              id="createdDate"
-              name="createdDate"
-              value={formatDateTime(vocab.createdDate)}
+              type="text"
+              id="pronunciation"
+              name="pronunciation"
+              className="form-control bg-dark text-light border-secondary"
+              value={vocab.pronunciation || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="updatedDate">Updated Date</label>
+          <div className="col-md-6">
+            <label htmlFor="definition" className="form-label">Definition</label>
             <input
-              type="datetime-local"
-              id="updatedDate"
-              name="updatedDate"
-              value={formatDateTime(vocab.updatedDate)}
+              type="text"
+              id="definition"
+              name="definition"
+              className="form-control bg-dark text-light border-secondary"
+              value={vocab.definition || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="lastAttempt">Last Attempt</label>
-            <input
-              type="datetime-local"
-              id="lastAttempt"
-              name="lastAttempt"
-              value={formatDateTime(vocab.lastAttempt)}
+          <div className="col-12">
+            <label htmlFor="example" className="form-label">Example</label>
+            <textarea
+              id="example"
+              name="example"
+              rows="3"
+              className="form-control bg-dark text-light border-secondary"
+              value={vocab.example || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="lastCorrect">Last Correct</label>
-            <input
-              type="datetime-local"
-              id="lastCorrect"
-              name="lastCorrect"
-              value={formatDateTime(vocab.lastCorrect)}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="lastFail">Last Fail</label>
-            <input
-              type="datetime-local"
-              id="lastFail"
-              name="lastFail"
-              value={formatDateTime(vocab.lastFail)}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
 
-        <div className="form-actions">
-          <button type="submit" className="btn btn-primary">
-            Save
-          </button>
-          <button type="button" className="btn" onClick={handleCancel}>
-            Cancel
-          </button>
-        </div>
-      </form>
+          <div className="col-12">
+            <div className="row g-3">
+              <div className="col-md-4">
+                <label htmlFor="attempt" className="form-label">Attempt</label>
+                <input
+                  type="number"
+                  id="attempt"
+                  name="attempt"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={vocab.attempt || 0}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="successTotal" className="form-label">Success Total</label>
+                <input
+                  type="number"
+                  id="successTotal"
+                  name="successTotal"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={vocab.successTotal || 0}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="failTotal" className="form-label">Fail Total</label>
+                <input
+                  type="number"
+                  id="failTotal"
+                  name="failTotal"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={vocab.failTotal || 0}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="needTest" className="form-label">Need Test</label>
+                <input
+                  type="text"
+                  id="needTest"
+                  name="needTest"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={vocab.needTest || ''}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="lastResult" className="form-label">Last Result</label>
+                <input
+                  type="text"
+                  id="lastResult"
+                  name="lastResult"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={vocab.lastResult || ''}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="createdDate" className="form-label">Created Date</label>
+                <input
+                  type="datetime-local"
+                  id="createdDate"
+                  name="createdDate"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={formatDateTime(vocab.createdDate)}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="updatedDate" className="form-label">Updated Date</label>
+                <input
+                  type="datetime-local"
+                  id="updatedDate"
+                  name="updatedDate"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={formatDateTime(vocab.updatedDate)}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="lastAttempt" className="form-label">Last Attempt</label>
+                <input
+                  type="datetime-local"
+                  id="lastAttempt"
+                  name="lastAttempt"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={formatDateTime(vocab.lastAttempt)}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="lastCorrect" className="form-label">Last Correct</label>
+                <input
+                  type="datetime-local"
+                  id="lastCorrect"
+                  name="lastCorrect"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={formatDateTime(vocab.lastCorrect)}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="lastFail" className="form-label">Last Fail</label>
+                <input
+                  type="datetime-local"
+                  id="lastFail"
+                  name="lastFail"
+                  className="form-control bg-dark text-light border-secondary"
+                  value={formatDateTime(vocab.lastFail)}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-12 d-flex gap-2 justify-content-end">
+            <button type="submit" className="btn btn-primary">Save</button>
+            <button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

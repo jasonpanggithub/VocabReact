@@ -12,90 +12,91 @@ function Menu() {
   }
 
   return (
-    <header className="menu">
-      <div className="menu__bar">
-        <div className="menu__brand">Vocab</div>
+    <header className="menu navbar navbar-expand-md navbar-dark bg-dark">
+      <div className="container">
+        <span className="navbar-brand">Vocab</span>
         <button
-          className="menu__toggle"
+          className="navbar-toggler"
           type="button"
           aria-expanded={open}
           aria-controls="primary-navigation"
+          aria-label="Toggle navigation"
           onClick={() => setOpen((prev) => !prev)}
         >
-          <span className="menu__toggle-text">Menu</span>
-          <span className="menu__toggle-icon" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </span>
+          <span className="navbar-toggler-icon" />
         </button>
-      </div>
-      <nav
-        id="primary-navigation"
-        className={`menu__links ${open ? 'is-open' : ''}`}
-      >
-        {navItems
-          .filter((item) => item.label)
-          .map((item) => {
-            if (item.children?.length) {
-              const isActive = item.children.some((child) =>
-                location.pathname.startsWith(child.path)
-              )
-              return (
-                <div key={item.label} className="menu__item">
-                  <button
-                    type="button"
-                    className={`menu__link menu__link--parent ${
-                      isActive ? 'menu__link--active' : ''
-                    }`}
-                    aria-haspopup="true"
-                  >
-                    {item.label}
-                  </button>
-                  <div className="menu__submenu">
-                    {item.children
-                      .filter((child) => child.label)
-                      .map((child) => {
-                        const isChildActive =
-                          child.path === '/'
-                            ? location.pathname === '/'
-                            : location.pathname.startsWith(child.path)
-                        return (
-                          <Link
-                            key={child.path}
-                            to={child.path}
-                            className={`menu__sublink ${
-                              isChildActive ? 'menu__sublink--active' : ''
-                            }`}
-                            onClick={handleNavigation}
-                          >
-                            {child.label}
-                          </Link>
-                        )
-                      })}
-                  </div>
-                </div>
-              )
-            }
+        <nav
+          id="primary-navigation"
+          className={`collapse navbar-collapse ${open ? 'show' : ''}`}
+        >
+          <ul className="navbar-nav ms-auto">
+            {navItems
+              .filter((item) => item.label)
+              .map((item) => {
+                if (item.children?.length) {
+                  const isActive = item.children.some((child) =>
+                    location.pathname.startsWith(child.path)
+                  )
+                  return (
+                    <li
+                      key={item.label}
+                      className={`nav-item dropdown ${
+                        isActive ? 'active' : ''
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        className="nav-link dropdown-toggle"
+                        aria-haspopup="true"
+                      >
+                        {item.label}
+                      </button>
+                      <ul className="dropdown-menu">
+                        {item.children
+                          .filter((child) => child.label)
+                          .map((child) => {
+                            const isChildActive =
+                              child.path === '/'
+                                ? location.pathname === '/'
+                                : location.pathname.startsWith(child.path)
+                            return (
+                              <li key={child.path}>
+                                <Link
+                                  to={child.path}
+                                  className={`dropdown-item ${
+                                    isChildActive ? 'active' : ''
+                                  }`}
+                                  onClick={handleNavigation}
+                                >
+                                  {child.label}
+                                </Link>
+                              </li>
+                            )
+                          })}
+                      </ul>
+                    </li>
+                  )
+                }
 
-            const isActive =
-              item.path === '/'
-                ? location.pathname === '/'
-                : location.pathname.startsWith(item.path)
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`menu__link ${
-                  isActive ? 'menu__link--active' : ''
-                }`}
-                onClick={handleNavigation}
-              >
-                {item.label}
-              </Link>
-            )
-          })}
-      </nav>
+                const isActive =
+                  item.path === '/'
+                    ? location.pathname === '/'
+                    : location.pathname.startsWith(item.path)
+                return (
+                  <li key={item.path} className="nav-item">
+                    <Link
+                      to={item.path}
+                      className={`nav-link ${isActive ? 'active' : ''}`}
+                      onClick={handleNavigation}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                )
+              })}
+          </ul>
+        </nav>
+      </div>
     </header>
   )
 }

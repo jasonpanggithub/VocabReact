@@ -1,5 +1,4 @@
 ﻿import { useEffect, useState } from 'react'
-import './NewWord.css'
 
 const defaultForm = {
   add: false,
@@ -35,66 +34,87 @@ function NewWord({ data, onChange }) {
   }
 
   return (
-    <div className="new-word">
-      <div className="new-word__row">
-        <label className="new-word__check">
+    <div className="card bg-dark text-light border-secondary p-2">
+      <div className="row g-2 align-items-center">
+        <div className="col-auto">
+          <label className="form-check d-flex align-items-center gap-1 m-0">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              name="add"
+              checked={form.add}
+              onChange={handleChange}
+            />
+            <span className="form-check-label">Add</span>
+          </label>
+        </div>
+        <div className="col-auto">
+          <label className="form-check d-flex align-items-center gap-1 m-0">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              name="needTest"
+              checked={form.needTest}
+              onChange={handleChange}
+            />
+            <span className="form-check-label">Need Test</span>
+          </label>
+        </div>
+        <div className="col-sm-2">
+          <label className="form-label mb-1">Spelling</label>
           <input
-            type="checkbox"
-            name="add"
-            checked={form.add}
+            className="form-control form-control-sm bg-dark text-light border-secondary"
+            name="spelling"
+            type="text"
+            placeholder="Spelling"
+            value={form.spelling}
             onChange={handleChange}
           />
-          <span>Add</span>
-        </label>
-        <label className="new-word__check">
+        </div>
+        <div className="col-sm-1">
+          <label className="form-label mb-1">Pronunciation</label>
           <input
-            type="checkbox"
-            name="needTest"
-            checked={form.needTest}
+            className="form-control form-control-sm bg-dark text-light border-secondary"
+            name="pronunciation"
+            type="text"
+            placeholder="Pronunciation"
+            value={form.pronunciation}
             onChange={handleChange}
           />
-          <span>Need Test</span>
-        </label>
-        <input
-          className="new-word__input"
-          name="spelling"
-          type="text"
-          placeholder="Spelling"
-          value={form.spelling}
-          onChange={handleChange}
-        />
-        <input
-          className="new-word__input"
-          name="pronunciation"
-          type="text"
-          placeholder="Pronunciation"
-          value={form.pronunciation}
-          onChange={handleChange}
-        />
-        <input
-          className="new-word__input"
-          name="stem"
-          type="text"
-          placeholder="Stem"
-          value={form.stem}
-          onChange={handleChange}
-        />
-        <input
-          className="new-word__input"
-          name="definition"
-          type="text"
-          placeholder="Definition"
-          value={form.definition}
-          onChange={handleChange}
-        />
-        <input
-          className="new-word__input"
-          name="example"
-          type="text"
-          placeholder="Example"
-          value={form.example}
-          onChange={handleChange}
-        />
+        </div>
+        <div className="col-sm-1">
+          <label className="form-label mb-1">Stem</label>
+          <input
+            className="form-control form-control-sm bg-dark text-light border-secondary"
+            name="stem"
+            type="text"
+            placeholder="Stem"
+            value={form.stem}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-sm-3">
+          <label className="form-label mb-1">Definition</label>
+          <input
+            className="form-control form-control-sm bg-dark text-light border-secondary"
+            name="definition"
+            type="text"
+            placeholder="Definition"
+            value={form.definition}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-sm-3">
+          <label className="form-label mb-1">Example</label>
+          <input
+            className="form-control form-control-sm bg-dark text-light border-secondary"
+            name="example"
+            type="text"
+            placeholder="Example"
+            value={form.example}
+            onChange={handleChange}
+          />
+        </div>
       </div>
     </div>
   )

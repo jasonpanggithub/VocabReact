@@ -31,10 +31,10 @@ function TNPlus() {
   }, [])
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h1 style={{ textAlign: 'center' }}>Dictation TN+</h1>
-      {loading && <div style={{ textAlign: 'center' }}>Loading...</div>}
-      {error && <div style={{ textAlign: 'center' }}>Error: {error}</div>}
+    <div className="container py-3">
+      <h1 className="text-center mb-3">Dictation TN+</h1>
+      {loading && <div className="text-center">Loading...</div>}
+      {error && <div className="text-center text-danger">Error: {error}</div>}
       {!loading && !error && (
         <Dictation
           key={`tnplus-${vocabList.length}`}
@@ -47,4 +47,3 @@ function TNPlus() {
 }
 
 export default TNPlus
-
