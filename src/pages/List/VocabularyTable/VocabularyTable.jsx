@@ -39,21 +39,24 @@ function VocabularyTable() {
     fetchVocabulary(1)
   }, [])
 
-  const searchVocabulary = async (term) => {
+  const searchVocabulary = async (term, pageNum = 1) => {
     setLoading(true)
     setError(null)
     try {
       const response = await fetch(
-        `${API_BASE_URL}/Vocabularies/search?q=${encodeURIComponent(term)}`
+        `${API_BASE_URL}/Vocabularies/search?q=${encodeURIComponent(
+          term
+        )}&page=${pageNum}&pageSize=${PAGE_LENGTH}`
       )
       if (!response.ok) {
         throw new Error(`Failed to search vocabulary (${response.status})`)
       }
       const result = await response.json()
       const items = Array.isArray(result) ? result : result.items || []
+      const totalCount = result.totalCount ?? items.length
       setData(items)
-      setTotalRecords(items.length)
-      setCurrentPage(1)
+      setTotalRecords(totalCount)
+      setCurrentPage(pageNum)
     } catch (err) {
       setError(err.message)
       setData([])
@@ -66,14 +69,22 @@ function VocabularyTable() {
     event.preventDefault()
     const trimmed = searchTerm.trim()
     if (trimmed) {
-      searchVocabulary(trimmed)
+      searchVocabulary(trimmed, 1)
     } else {
       fetchVocabulary(1)
     }
   }
 
   const totalPages = Math.ceil(totalRecords / PAGE_LENGTH)
-  const isSearching = searchTerm.trim().length > 0
+
+  const handlePageChange = (pageNum) => {
+    const trimmed = searchTerm.trim()
+    if (trimmed) {
+      searchVocabulary(trimmed, pageNum)
+    } else {
+      fetchVocabulary(pageNum)
+    }
+  }
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm('Delete this vocabulary entry?')
@@ -90,7 +101,7 @@ function VocabularyTable() {
       if (isSearching) {
         const trimmed = searchTerm.trim()
         if (trimmed) {
-          await searchVocabulary(trimmed)
+          await searchVocabulary(trimmed, currentPage)
           return
         }
       }
@@ -176,13 +187,11 @@ function VocabularyTable() {
           )}
         </tbody>
       </table>
-      {!isSearching && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={fetchVocabulary}
-        />
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   )
 }

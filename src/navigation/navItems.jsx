@@ -2,6 +2,7 @@ import List from '../pages/List/List'
 import Add from '../pages/Add/Add'
 import Capture from '../pages/Capture/Capture'
 import ByDate from '../pages/Dictation/ByDate/ByDate'
+import ByFail from '../pages/Dictation/ByFail/ByFail'
 import TNPlus from '../pages/Dictation/TNPlus/TNPlus'
 import Edit from '../pages/Edit/Edit'
 
@@ -13,6 +14,7 @@ const navItems = [
     label: 'Dictation',
     children: [
       { path: '/dictation/by-date', label: 'By Date', element: <ByDate /> },
+      { path: '/dictation/by-fail', label: 'By Fail', element: <ByFail /> },
       { path: '/dictation/tn-plus', label: 'TN+', element: <TNPlus /> },
     ],
   },
