@@ -197,6 +197,10 @@ function Dictation({ vocabList = [], onUpdateList }) {
             value={spellingInput}
             onChange={(event) => setSpellingInput(event.target.value)}
             disabled={spellingDisabled}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
           />
         </div>
       </form>

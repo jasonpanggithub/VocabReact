@@ -14,9 +14,8 @@ function Menu() {
   return (
     <header className="menu navbar navbar-expand-md navbar-dark bg-dark">
       <div className="container">
-        <span className="navbar-brand">Vocab</span>
-        <button
-          className="navbar-toggler"
+        <span className="navbar-brand">Vocab 2026</span>
+        <button className="navbar-toggler" 
           type="button"
           aria-expanded={open}
           aria-controls="primary-navigation"

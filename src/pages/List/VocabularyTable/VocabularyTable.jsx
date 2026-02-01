@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import Pagination from '../Pagination/Pagination'
 import { API_BASE_URL } from '../../../config/api'
+import './VocabularyTable.css'
 
 const PAGE_LENGTH = 5
 
@@ -148,7 +149,7 @@ function VocabularyTable() {
           <tbody>
             {data.length > 0 ? (
               data.map((vocab) => (
-                <tr key={vocab.id}>
+                <tr key={vocab.id} className="vocabulary-table__row-hover">
                   <td>{vocab.spelling}</td>
                   <td>{vocab.pronunciation || '—'}</td>
                   <td>{vocab.definition}</td>
@@ -194,3 +195,4 @@ function VocabularyTable() {
 }
 
 export default VocabularyTable
+

@@ -85,8 +85,14 @@
   transition: background-color 0.2s ease;
 }
 
-.vocabulary-table__row:hover {
-  background-color: #fafafa;
+.vocabulary-table__row-hover:hover {
+  background-color: #1f7a3a !important;
+  color: #ffffff !important;
+}
+
+.table.table-dark {
+  --bs-table-hover-bg: #1f7a3a;
+  --bs-table-hover-color: #ffffff;
 }
 
 .vocabulary-table__cell {
