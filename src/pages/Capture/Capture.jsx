@@ -108,7 +108,7 @@ function Capture() {
         </button>
         <button
           type="button"
-          className="btn btn-secondary"
+          className="btn btn-danger"
           onClick={handleSave}
           disabled={saving || result.length === 0}
         >

@@ -156,7 +156,7 @@ function VocabularyTable() {
                   <td className="text-end">
                     <Link
                       to={`/edit/${vocab.id}`}
-                      className="btn btn-sm btn-outline-light me-2"
+                      className="btn btn-sm btn-primary me-2"
                       aria-label={`Edit ${vocab.spelling}`}
                       title="Edit"
                     >
@@ -164,7 +164,7 @@ function VocabularyTable() {
                     </Link>
                     <button
                       type="button"
-                      className="btn btn-sm btn-outline-danger"
+                      className="btn btn-sm btn-danger"
                       onClick={() => handleDelete(vocab.id)}
                       aria-label={`Delete ${vocab.spelling}`}
                       title="Delete"

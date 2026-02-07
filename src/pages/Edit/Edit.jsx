@@ -268,7 +268,7 @@ function Edit() {
 
           <div className="col-12 d-flex gap-2 justify-content-end">
             <button type="submit" className="btn btn-primary">Save</button>
-            <button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>Cancel</button>
+            <button type="button" className="btn btn-danger" onClick={handleCancel}>Cancel</button>
           </div>
         </form>
       </div>

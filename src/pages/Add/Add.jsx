@@ -143,7 +143,7 @@ function Add() {
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? 'Saving...' : 'Save'}
             </button>
-            <button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>
+            <button type="button" className="btn btn-danger" onClick={handleCancel}>
               Cancel
             </button>
           </div>
