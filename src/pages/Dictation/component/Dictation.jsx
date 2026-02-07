@@ -38,55 +38,59 @@ function Dictation({ vocabList = [], onUpdateList }) {
   const handleSpellingSubmit = (event) => {
     event.preventDefault()
     const now = new Date().toISOString()
-    const expected = (currentVocab?.spelling || '').trim()
-    const actual = spellingInput.trim()
+    const expected = (currentVocab?.spelling || '').trim().toLowerCase()
+    const actual = spellingInput.trim().toLowerCase()
     if (!expected || !actual) return
-    if (expected === actual) {
-      if (onUpdateList) {
-        onUpdateList((prev) =>
-          prev.map((item, idx) =>
-            idx === currentIndex
-              ? {
-                  ...item,
-                  attempt: (item.attempt || 0) + 1,
-                  successTotal: (item.successTotal || 0) + 1,
-                  lastAttempt: now,
-                  lastCorrect: now,
-                  lastResult: 'SUCCESS',
-                }
-              : item
-          )
-        )
-      }
-      if (currentIndex >= vocabList.length - 1) {
-        if (hasMatched) return
-        setHasMatched(true)
+
+    const updateCurrentItem = (updates) => {
+      if (!onUpdateList) return
+      onUpdateList((prev) =>
+        prev.map((item, idx) => (idx === currentIndex ? { ...item, ...updates(item) } : item))
+      )
+    }
+
+    const handleCorrectSubmit = () => {
+      updateCurrentItem((item) => ({
+        attempt: (item.attempt || 0) + 1,
+        successTotal: (item.successTotal || 0) + 1,
+        lastAttempt: now,
+        lastCorrect: now,
+        lastResult: 'SUCCESS',
+      }))
+
+      const isLast = currentIndex >= vocabList.length - 1
+      if (!isLast) {
         setCorrectCount((prev) => prev + 1)
+        setCurrentIndex((prev) => prev + 1)
+        setSpellingInput('')
+        setHasMatched(false)
         return
       }
+
+      if (hasMatched) return
+      setHasMatched(true)
       setCorrectCount((prev) => prev + 1)
-      setCurrentIndex((prev) => prev + 1)
-      setSpellingInput('')
+      handlePlay('this is the last vocabulary')
+    }
+
+    const handleWrongSubmit = () => {
+      updateCurrentItem((item) => ({
+        attempt: (item.attempt || 0) + 1,
+        failTotal: (item.failTotal || 0) + 1,
+        lastAttempt: now,
+        lastFail: now,
+        lastResult: 'FAIL',
+      }))
       setHasMatched(false)
-    } else {
-      if (onUpdateList) {
-        onUpdateList((prev) =>
-          prev.map((item, idx) =>
-            idx === currentIndex
-              ? {
-                  ...item,
-                  attempt: (item.attempt || 0) + 1,
-                  failTotal: (item.failTotal || 0) + 1,
-                  lastAttempt: now,
-                  lastFail: now,
-                  lastResult: 'FAIL',
-                }
-              : item
-          )
-        )
-      }
       handlePlay('wrong')
     }
+
+    if (expected === actual) {
+      handleCorrectSubmit()
+      return
+    }
+
+    handleWrongSubmit()
   }
 
   const handleNext = () => {
