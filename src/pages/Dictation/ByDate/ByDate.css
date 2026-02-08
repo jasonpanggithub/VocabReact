@@ -17,6 +17,10 @@
   color: #f6c453;
 }
 
+.bydate__toolbar {
+  margin: 0.75rem 0 1rem;
+}
+
 .bydate__error {
   color: #ff8a8a;
   margin-bottom: 0.75rem;

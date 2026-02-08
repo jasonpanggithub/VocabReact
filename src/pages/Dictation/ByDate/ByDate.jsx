@@ -1,6 +1,6 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './ByDate.css'
-import Calendar from './Calendar'
+import Calendar from '../../../components/Calendar/Calendar'
 import Dictation from '../component/Dictation'
 import { API_BASE_URL } from '../../../config/api'
 
@@ -110,6 +110,19 @@ function ByDate() {
         <>
           <div className="bydate__selected">
             Selected: <span>{selectedLabel}</span>
+          </div>
+          <div className="bydate__toolbar">
+            <button
+              type="button"
+              className="btn btn-outline-light btn-sm"
+              onClick={() => {
+                setSelectedDate(null)
+                setVocabList([])
+                setError(null)
+              }}
+            >
+              Change Date
+            </button>
           </div>
           {loading ? (
             <div className="bydate__loading">Loading vocabularies...</div>

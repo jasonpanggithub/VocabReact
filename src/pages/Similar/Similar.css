@@ -1,0 +1,86 @@
+.similar-page {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.similar-page__hint {
+  color: #cfd3ff;
+  margin-bottom: 1rem;
+}
+
+.similar-page__selected {
+  color: #f5f5f5;
+  font-weight: 500;
+}
+
+.similar-page__selected span {
+  color: #f6c453;
+}
+
+.similar-page__toolbar {
+  margin: 0.75rem 0 1rem;
+}
+
+.similar-page__error {
+  color: #ff8a8a;
+  margin-bottom: 0.75rem;
+}
+
+.similar-page__warning {
+  color: #f6c453;
+}
+
+.similar-page__loading {
+  color: #f5f5f5;
+  margin-top: 1rem;
+}
+
+.similar-page__instruction {
+  margin-bottom: 0.75rem;
+}
+
+.similar-page__options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.similar-page__option {
+  min-width: 140px;
+  width: auto;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.similar-page__option--correct {
+  background-color: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+
+.similar-page__option--wrong {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+.similar-page__option:disabled {
+  opacity: 1;
+}
+
+.similar-page__option--correct:disabled {
+  background-color: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+
+.similar-page__option--wrong:disabled {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+.similar-page__wrong-details {
+  text-align: left;
+}

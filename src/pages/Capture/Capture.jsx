@@ -1,8 +1,10 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import NewWord from './NewWord'
 import { API_BASE_URL } from '../../config/api'
 
 function Capture() {
+  const navigate = useNavigate()
   const [text, setText] = useState('')
   const [result, setResult] = useState([])
   const [loading, setLoading] = useState(false)
@@ -80,6 +82,7 @@ function Capture() {
       if (!response.ok) {
         throw new Error(`Failed to save (${response.status})`)
       }
+      navigate('/list')
     } catch (err) {
       setSaveError(err.message)
     } finally {
@@ -133,3 +136,4 @@ function Capture() {
 }
 
 export default Capture
+
