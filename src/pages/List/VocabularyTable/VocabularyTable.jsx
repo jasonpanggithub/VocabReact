@@ -1,10 +1,18 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Pagination from '../Pagination/Pagination'
 import { API_BASE_URL } from '../../../config/api'
 import './VocabularyTable.css'
 
 const PAGE_LENGTH = 5
+
+function speakWord(word) {
+  if (!window.responsiveVoice || typeof window.responsiveVoice.speak !== 'function') {
+    return
+  }
+  if (!word) return
+  window.responsiveVoice.speak(word)
+}
 
 function VocabularyTable() {
   const [data, setData] = useState([])
@@ -137,22 +145,47 @@ function VocabularyTable() {
       </div>
 
       <div className="table-responsive">
-        <table className="table table-dark table-striped table-hover align-middle">
+        <table className="table table-dark table-striped table-hover align-middle vocabulary-table__table">
           <thead>
             <tr>
               <th>Spelling</th>
-              <th>Pronunciation</th>
+              <th>Stem</th>
               <th>Definition</th>
+              <th>Example</th>
+              <th>Pronunciation</th>
+              <th className="text-center">Speak</th>
               <th className="text-end">Actions</th>
             </tr>
           </thead>
           <tbody>
             {data.length > 0 ? (
               data.map((vocab) => (
-                <tr key={vocab.id} className="vocabulary-table__row-hover">
+                <tr key={vocab.id || vocab.spelling}>
                   <td>{vocab.spelling}</td>
+                  <td>{vocab.stem || '—'}</td>
+                  <td>{vocab.definition || '—'}</td>
+                  <td>{vocab.example || '—'}</td>
                   <td>{vocab.pronunciation || '—'}</td>
-                  <td>{vocab.definition}</td>
+                  <td className="text-center">
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-light vocabulary-table__speak-btn"
+                      onClick={() => speakWord(vocab.spelling)}
+                      aria-label={`Speak ${vocab.spelling || 'vocabulary'}`}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 3.5a.5.5 0 0 1 .8-.4L12.2 5H14a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1.8L9.8 12.9A.5.5 0 0 1 9 12.5v-9zM4 6h2v4H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z" />
+                        <path d="M11.5 6.2a.5.5 0 0 1 .7.1c.7.9.7 2.5 0 3.4a.5.5 0 1 1-.8-.6c.4-.6.4-1.6 0-2.2a.5.5 0 0 1 .1-.7z" />
+                      </svg>
+                    </button>
+                  </td>
                   <td className="text-end">
                     <Link
                       to={`/edit/${vocab.id}`}
@@ -176,7 +209,7 @@ function VocabularyTable() {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center text-muted py-4">
+                <td colSpan="7" className="text-center text-muted py-4">
                   No vocabulary data available
                 </td>
               </tr>
@@ -195,4 +228,3 @@ function VocabularyTable() {
 }
 
 export default VocabularyTable
-
