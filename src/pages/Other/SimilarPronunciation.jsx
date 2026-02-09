@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Calendar from '../../components/Calendar/Calendar'
 import { API_BASE_URL } from '../../config/api'
-import './Similar.css'
+import './SimilarSpelling.css'
 
 function toDateKey(date) {
   const year = date.getFullYear()
@@ -29,7 +29,7 @@ function shuffle(items) {
   return next
 }
 
-function normalizeSimilarSpellings(result) {
+function normalizeSimilarWords(result) {
   if (!Array.isArray(result)) return []
 
   return result
@@ -62,7 +62,7 @@ function playWord(word) {
   window.responsiveVoice.speak(word)
 }
 
-function Similar() {
+function SimilarPronunciation() {
   const [selectedDate, setSelectedDate] = useState(null)
   const [availableDates, setAvailableDates] = useState([])
   const [loadingDates, setLoadingDates] = useState(false)
@@ -133,7 +133,7 @@ function Similar() {
             try {
               const query = encodeURIComponent(originalSpelling)
               const similarResponse = await fetch(
-                `${API_BASE_URL}/Vocabularies/similar-spellings?spelling=${query}`
+                `${API_BASE_URL}/Vocabularies/similar-pronunciations?spelling=${query}&top=4`
               )
               if (!similarResponse.ok) {
                 failedOptionCalls += 1
@@ -142,7 +142,7 @@ function Similar() {
 
               const similarResult = await similarResponse.json()
               const lowerOriginal = originalSpelling.toLowerCase()
-              const similarOnly = normalizeSimilarSpellings(similarResult).filter(
+              const similarOnly = normalizeSimilarWords(similarResult).filter(
                 (item) => item.spelling.toLowerCase() !== lowerOriginal
               )
 
@@ -351,7 +351,7 @@ function Similar() {
 
   return (
     <div className="similar-page">
-      <h1>Similar</h1>
+      <h1>Similar Pronunciation</h1>
       {!selectedDate && (
         <p className="similar-page__hint">
           {loadingDates ? 'Loading available dates...' : 'Select a date from the available list.'}
@@ -507,4 +507,4 @@ function Similar() {
   )
 }
 
-export default Similar
+export default SimilarPronunciation
