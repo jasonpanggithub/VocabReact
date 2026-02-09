@@ -4,6 +4,7 @@ import Capture from '../pages/Capture/Capture'
 import Similar from '../pages/Other/SimilarSpelling'
 import SimilarPronunciation from '../pages/Other/SimilarPronunciation'
 import Review from '../pages/Other/Review'
+import Definition from '../pages/Other/Definition'
 import ByDate from '../pages/Dictation/ByDate/ByDate'
 import ByFail from '../pages/Dictation/ByFail/ByFail'
 import TNPlus from '../pages/Dictation/TNPlus/TNPlus'
@@ -38,6 +39,11 @@ const navItems = [
         path: '/other/review',
         label: 'Review',
         element: <Review />,
+      },
+      {
+        path: '/other/definition',
+        label: 'Definition',
+        element: <Definition />,
       },
     ],
   },

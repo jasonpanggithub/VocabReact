@@ -1,0 +1,38 @@
+.definition-page {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.definition-page__hint {
+  color: #cfd3ff;
+  margin-bottom: 1rem;
+}
+
+.definition-page__selected {
+  color: #f5f5f5;
+  font-weight: 500;
+}
+
+.definition-page__selected span {
+  color: #f6c453;
+}
+
+.definition-page__toolbar {
+  margin: 0.75rem 0 1rem;
+}
+
+.definition-page__error {
+  color: #ff8a8a;
+  margin-bottom: 0.75rem;
+}
+
+.definition-page__loading,
+.definition-page__empty {
+  color: #f5f5f5;
+  margin-top: 1rem;
+}
+
+.definition-page__spelling {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
