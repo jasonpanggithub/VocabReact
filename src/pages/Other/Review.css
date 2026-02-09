@@ -1,0 +1,41 @@
+.review-page {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.review-page__hint {
+  color: #cfd3ff;
+  margin-bottom: 1rem;
+}
+
+.review-page__selected {
+  color: #f5f5f5;
+  font-weight: 500;
+}
+
+.review-page__selected span {
+  color: #f6c453;
+}
+
+.review-page__toolbar {
+  margin: 0.75rem 0 1rem;
+}
+
+.review-page__error {
+  color: #ff8a8a;
+  margin-bottom: 0.75rem;
+}
+
+.review-page__loading,
+.review-page__empty {
+  color: #f5f5f5;
+  margin-top: 1rem;
+}
+
+.review-page__table {
+  text-align: left;
+}
+
+.review-page__speak-btn {
+  min-width: 32px;
+}

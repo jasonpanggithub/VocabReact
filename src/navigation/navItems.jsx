@@ -3,6 +3,7 @@ import Add from '../pages/Add/Add'
 import Capture from '../pages/Capture/Capture'
 import Similar from '../pages/Other/SimilarSpelling'
 import SimilarPronunciation from '../pages/Other/SimilarPronunciation'
+import Review from '../pages/Other/Review'
 import ByDate from '../pages/Dictation/ByDate/ByDate'
 import ByFail from '../pages/Dictation/ByFail/ByFail'
 import TNPlus from '../pages/Dictation/TNPlus/TNPlus'
@@ -32,6 +33,11 @@ const navItems = [
         path: '/other/similar-pronunciation',
         label: 'Similar Pronunciation',
         element: <SimilarPronunciation />,
+      },
+      {
+        path: '/other/review',
+        label: 'Review',
+        element: <Review />,
       },
     ],
   },
