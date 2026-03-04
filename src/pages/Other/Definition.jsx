@@ -28,6 +28,7 @@ function playWord(word) {
 
 function Definition() {
   const [selectedDate, setSelectedDate] = useState(null)
+  const [lastSelectedDate, setLastSelectedDate] = useState(null)
   const [availableDates, setAvailableDates] = useState([])
   const [loadingDates, setLoadingDates] = useState(false)
   const [loadingList, setLoadingList] = useState(false)
@@ -217,8 +218,13 @@ function Definition() {
       ) : (
         <Calendar
           availableDates={availableDates}
-          selectedDate={selectedDate}
-          onSelectDate={(date) => date && setSelectedDate(date)}
+          selectedDate={selectedDate ?? lastSelectedDate}
+          focusedDate={lastSelectedDate}
+          onSelectDate={(date) => {
+            if (!date) return
+            setSelectedDate(date)
+            setLastSelectedDate(date)
+          }}
         />
       )}
     </div>

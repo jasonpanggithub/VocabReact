@@ -21,6 +21,7 @@ function normalizeDateValue(value) {
 
 function ByDate() {
   const [selectedDate, setSelectedDate] = useState(null)
+  const [lastSelectedDate, setLastSelectedDate] = useState(null)
   const [availableDates, setAvailableDates] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -81,6 +82,7 @@ function ByDate() {
   const handleSelectDate = (date) => {
     if (!date) return
     setSelectedDate(date)
+    setLastSelectedDate(date)
   }
 
   const selectedLabel = selectedDate
@@ -137,7 +139,8 @@ function ByDate() {
       ) : (
         <Calendar
           availableDates={availableDates}
-          selectedDate={selectedDate}
+          selectedDate={selectedDate ?? lastSelectedDate}
+          focusedDate={lastSelectedDate}
           onSelectDate={handleSelectDate}
         />
       )}

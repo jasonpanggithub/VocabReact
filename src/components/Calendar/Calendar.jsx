@@ -1,6 +1,8 @@
 ﻿import { useMemo, useState } from 'react'
 import './Calendar.css'
 
+import { useEffect } from 'react'
+
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 function toMondayIndex(day) {
@@ -14,11 +16,34 @@ function toDateKey(date) {
   return `${year}-${month}-${day}`
 }
 
-function Calendar({ availableDates, selectedDate, onSelectDate }) {
+function getMonthStart(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null
+  return new Date(date.getFullYear(), date.getMonth(), 1)
+}
+
+function Calendar({ availableDates, selectedDate, onSelectDate, focusedDate }) {
   const today = new Date()
   const [viewDate, setViewDate] = useState(
-    new Date(today.getFullYear(), today.getMonth(), 1)
+    getMonthStart(focusedDate) ??
+      getMonthStart(selectedDate) ??
+      new Date(today.getFullYear(), today.getMonth(), 1)
   )
+
+  useEffect(() => {
+    const nextViewDate = getMonthStart(focusedDate) ?? getMonthStart(selectedDate)
+    if (!nextViewDate) return
+
+    setViewDate((prev) => {
+      if (
+        prev.getFullYear() === nextViewDate.getFullYear() &&
+        prev.getMonth() === nextViewDate.getMonth()
+      ) {
+        return prev
+      }
+
+      return nextViewDate
+    })
+  }, [focusedDate, selectedDate])
 
   const calendarCells = useMemo(() => {
     const year = viewDate.getFullYear()

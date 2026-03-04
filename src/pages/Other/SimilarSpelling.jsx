@@ -64,6 +64,7 @@ function playWord(word) {
 
 function Similar() {
   const [selectedDate, setSelectedDate] = useState(null)
+  const [lastSelectedDate, setLastSelectedDate] = useState(null)
   const [availableDates, setAvailableDates] = useState([])
   const [loadingDates, setLoadingDates] = useState(false)
   const [loadingQuiz, setLoadingQuiz] = useState(false)
@@ -232,6 +233,7 @@ function Similar() {
     }
     spokenRef.current = null
     setSelectedDate(date)
+    setLastSelectedDate(date)
   }
 
   const fetchDefinitionBySpelling = async (spelling) => {
@@ -499,7 +501,8 @@ function Similar() {
       ) : (
         <Calendar
           availableDates={availableDates}
-          selectedDate={selectedDate}
+          selectedDate={selectedDate ?? lastSelectedDate}
+          focusedDate={lastSelectedDate}
           onSelectDate={handleSelectDate}
         />
       )}
