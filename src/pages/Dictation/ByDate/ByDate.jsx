@@ -20,6 +20,7 @@ function normalizeDateValue(value) {
 }
 
 function ByDate() {
+  const [sourceType, setSourceType] = useState('calendar')
   const [selectedDate, setSelectedDate] = useState(null)
   const [lastSelectedDate, setLastSelectedDate] = useState(null)
   const [availableDates, setAvailableDates] = useState([])
@@ -52,16 +53,21 @@ function ByDate() {
   }, [])
 
   useEffect(() => {
-    if (!selectedDate) return
+    const endpointBySource = {
+      failed: `${API_BASE_URL}/Vocabularies/failed-to-test`,
+      tnplus: `${API_BASE_URL}/Vocabularies/tn-plus`,
+    }
+    const isCalendarMode = sourceType === 'calendar'
+    if (isCalendarMode && !selectedDate) return
 
-    const fetchByDate = async () => {
+    const fetchVocabularies = async () => {
       setLoading(true)
       setError(null)
       try {
-        const dateKey = toDateKey(selectedDate)
-        const response = await fetch(
-          `${API_BASE_URL}/Vocabularies/by-updated-date?date=${dateKey}`
-        )
+        const endpoint = isCalendarMode
+          ? `${API_BASE_URL}/Vocabularies/by-updated-date?date=${toDateKey(selectedDate)}`
+          : endpointBySource[sourceType]
+        const response = await fetch(endpoint)
         if (!response.ok) {
           throw new Error(`Failed to load vocabularies (${response.status})`)
         }
@@ -76,8 +82,8 @@ function ByDate() {
       }
     }
 
-    fetchByDate()
-  }, [selectedDate])
+    fetchVocabularies()
+  }, [selectedDate, sourceType])
 
   const handleSelectDate = (date) => {
     if (!date) return
@@ -93,13 +99,71 @@ function ByDate() {
         year: 'numeric',
       })
     : 'No date selected'
+  const isCalendarMode = sourceType === 'calendar'
 
   const selectedDateKey = selectedDate ? toDateKey(selectedDate) : null
+  const dictationKey = selectedDateKey
+    ? `${sourceType}-${selectedDateKey}-${vocabList.length}`
+    : `${sourceType}-${vocabList.length}`
 
   return (
     <div className="bydate">
       <h1>Dictation by Date</h1>
-      {!selectedDate && (
+      <div className="bydate__toolbar">
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="bydate-source"
+            id="bydate-source-calendar"
+            value="calendar"
+            checked={sourceType === 'calendar'}
+            onChange={() => {
+              setSourceType('calendar')
+              setError(null)
+            }}
+          />
+          <label className="form-check-label" htmlFor="bydate-source-calendar">
+            Calendar
+          </label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="bydate-source"
+            id="bydate-source-failed"
+            value="failed"
+            checked={sourceType === 'failed'}
+            onChange={() => {
+              setSourceType('failed')
+              setError(null)
+            }}
+          />
+          <label className="form-check-label" htmlFor="bydate-source-failed">
+            By Failed
+          </label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="bydate-source"
+            id="bydate-source-tnplus"
+            value="tnplus"
+            checked={sourceType === 'tnplus'}
+            onChange={() => {
+              setSourceType('tnplus')
+              setError(null)
+            }}
+          />
+          <label className="form-check-label" htmlFor="bydate-source-tnplus">
+            By TN+
+          </label>
+        </div>
+      </div>
+
+      {isCalendarMode && !selectedDate && (
         <p className="bydate__hint">
           {loading
             ? 'Loading available dates...'
@@ -108,7 +172,7 @@ function ByDate() {
       )}
       {error && <div className="bydate__error">Error: {error}</div>}
 
-      {selectedDate ? (
+      {isCalendarMode && selectedDate && (
         <>
           <div className="bydate__selected">
             Selected: <span>{selectedLabel}</span>
@@ -126,22 +190,23 @@ function ByDate() {
               Change Date
             </button>
           </div>
-          {loading ? (
-            <div className="bydate__loading">Loading vocabularies...</div>
-          ) : (
-            <Dictation
-              key={selectedDateKey ? `${selectedDateKey}-${vocabList.length}` : 'dictation'}
-              vocabList={vocabList}
-              onUpdateList={setVocabList}
-            />
-          )}
         </>
-      ) : (
+      )}
+
+      {isCalendarMode && !selectedDate ? (
         <Calendar
           availableDates={availableDates}
           selectedDate={selectedDate ?? lastSelectedDate}
           focusedDate={lastSelectedDate}
           onSelectDate={handleSelectDate}
+        />
+      ) : loading ? (
+        <div className="bydate__loading">Loading vocabularies...</div>
+      ) : (
+        <Dictation
+          key={dictationKey}
+          vocabList={vocabList}
+          onUpdateList={setVocabList}
         />
       )}
     </div>

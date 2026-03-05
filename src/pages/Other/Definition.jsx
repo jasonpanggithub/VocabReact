@@ -27,6 +27,7 @@ function playWord(word) {
 }
 
 function Definition() {
+  const [sourceType, setSourceType] = useState('calendar')
   const [selectedDate, setSelectedDate] = useState(null)
   const [lastSelectedDate, setLastSelectedDate] = useState(null)
   const [availableDates, setAvailableDates] = useState([])
@@ -63,16 +64,21 @@ function Definition() {
   }, [])
 
   useEffect(() => {
-    if (!selectedDate) return
+    const endpointBySource = {
+      failed: `${API_BASE_URL}/Vocabularies/failed-to-test`,
+      tnplus: `${API_BASE_URL}/Vocabularies/tn-plus`,
+    }
+    const isCalendarMode = sourceType === 'calendar'
+    if (isCalendarMode && !selectedDate) return
 
-    const fetchByDate = async () => {
+    const fetchVocabularies = async () => {
       setLoadingList(true)
       setError(null)
       try {
-        const dateKey = toDateKey(selectedDate)
-        const response = await fetch(
-          `${API_BASE_URL}/Vocabularies/by-updated-date?date=${dateKey}`
-        )
+        const endpoint = isCalendarMode
+          ? `${API_BASE_URL}/Vocabularies/by-updated-date?date=${toDateKey(selectedDate)}`
+          : endpointBySource[sourceType]
+        const response = await fetch(endpoint)
         if (!response.ok) {
           throw new Error(`Failed to load vocabularies (${response.status})`)
         }
@@ -90,8 +96,8 @@ function Definition() {
       }
     }
 
-    fetchByDate()
-  }, [selectedDate])
+    fetchVocabularies()
+  }, [selectedDate, sourceType])
 
   const currentVocab = vocabList[currentIndex] || null
 
@@ -110,18 +116,73 @@ function Definition() {
         year: 'numeric',
       })
     : 'No date selected'
+  const isCalendarMode = sourceType === 'calendar'
 
   return (
     <div className="definition-page">
       <h1>Definition</h1>
-      {!selectedDate && (
+      <div className="definition-page__toolbar">
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="definition-source"
+            id="definition-source-calendar"
+            value="calendar"
+            checked={sourceType === 'calendar'}
+            onChange={() => {
+              setSourceType('calendar')
+              setError(null)
+            }}
+          />
+          <label className="form-check-label" htmlFor="definition-source-calendar">
+            Calendar
+          </label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="definition-source"
+            id="definition-source-failed"
+            value="failed"
+            checked={sourceType === 'failed'}
+            onChange={() => {
+              setSourceType('failed')
+              setError(null)
+            }}
+          />
+          <label className="form-check-label" htmlFor="definition-source-failed">
+            By Failed
+          </label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="definition-source"
+            id="definition-source-tnplus"
+            value="tnplus"
+            checked={sourceType === 'tnplus'}
+            onChange={() => {
+              setSourceType('tnplus')
+              setError(null)
+            }}
+          />
+          <label className="form-check-label" htmlFor="definition-source-tnplus">
+            By TN+
+          </label>
+        </div>
+      </div>
+
+      {isCalendarMode && !selectedDate && (
         <p className="definition-page__hint">
           {loadingDates ? 'Loading available dates...' : 'Select a date from the available list.'}
         </p>
       )}
       {error && <div className="definition-page__error">Error: {error}</div>}
 
-      {selectedDate ? (
+      {isCalendarMode && selectedDate && (
         <>
           <div className="definition-page__selected">
             Selected: <span>{selectedLabel}</span>
@@ -142,13 +203,26 @@ function Definition() {
               Change Date
             </button>
           </div>
+        </>
+      )}
 
-          {loadingList ? (
-            <div className="definition-page__loading">Loading vocabularies...</div>
-          ) : !currentVocab ? (
-            <div className="definition-page__empty">No vocabularies available.</div>
-          ) : (
-            <div className="card bg-dark text-light border-secondary p-3">
+      {isCalendarMode && !selectedDate ? (
+        <Calendar
+          availableDates={availableDates}
+          selectedDate={selectedDate ?? lastSelectedDate}
+          focusedDate={lastSelectedDate}
+          onSelectDate={(date) => {
+            if (!date) return
+            setSelectedDate(date)
+            setLastSelectedDate(date)
+          }}
+        />
+      ) : loadingList ? (
+        <div className="definition-page__loading">Loading vocabularies...</div>
+      ) : !currentVocab ? (
+        <div className="definition-page__empty">No vocabularies available.</div>
+      ) : (
+        <div className="card bg-dark text-light border-secondary p-3">
               <div className="row g-2 text-center mb-3">
                 <div className="col-sm">
                   <div className="fw-semibold">Total</div>
@@ -212,20 +286,7 @@ function Definition() {
                   </div>
                 </div>
               )}
-            </div>
-          )}
-        </>
-      ) : (
-        <Calendar
-          availableDates={availableDates}
-          selectedDate={selectedDate ?? lastSelectedDate}
-          focusedDate={lastSelectedDate}
-          onSelectDate={(date) => {
-            if (!date) return
-            setSelectedDate(date)
-            setLastSelectedDate(date)
-          }}
-        />
+        </div>
       )}
     </div>
   )

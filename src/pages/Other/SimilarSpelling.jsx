@@ -63,6 +63,7 @@ function playWord(word) {
 }
 
 function Similar() {
+  const [sourceType, setSourceType] = useState('calendar')
   const [selectedDate, setSelectedDate] = useState(null)
   const [lastSelectedDate, setLastSelectedDate] = useState(null)
   const [availableDates, setAvailableDates] = useState([])
@@ -103,17 +104,22 @@ function Similar() {
   }, [])
 
   useEffect(() => {
-    if (!selectedDate) return
+    const endpointBySource = {
+      failed: `${API_BASE_URL}/Vocabularies/failed-to-test`,
+      tnplus: `${API_BASE_URL}/Vocabularies/tn-plus`,
+    }
+    const isCalendarMode = sourceType === 'calendar'
+    if (isCalendarMode && !selectedDate) return
 
     const fetchQuiz = async () => {
       setLoadingQuiz(true)
       setError(null)
       setOptionWarning(null)
       try {
-        const dateKey = toDateKey(selectedDate)
-        const response = await fetch(
-          `${API_BASE_URL}/Vocabularies/by-updated-date?date=${dateKey}`
-        )
+        const endpoint = isCalendarMode
+          ? `${API_BASE_URL}/Vocabularies/by-updated-date?date=${toDateKey(selectedDate)}`
+          : endpointBySource[sourceType]
+        const response = await fetch(endpoint)
         if (!response.ok) {
           throw new Error(`Failed to load vocabularies (${response.status})`)
         }
@@ -198,7 +204,7 @@ function Similar() {
     }
 
     fetchQuiz()
-  }, [selectedDate])
+  }, [selectedDate, sourceType])
 
   const currentQuestion = questions[currentIndex] || null
   const currentSpelling = currentQuestion?.vocab?.spelling || ''
@@ -350,18 +356,73 @@ function Similar() {
         year: 'numeric',
       })
     : 'No date selected'
+  const isCalendarMode = sourceType === 'calendar'
 
   return (
     <div className="similar-page">
       <h1>Similar Spelling</h1>
-      {!selectedDate && (
+      <div className="similar-page__toolbar">
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="similar-spelling-source"
+            id="similar-spelling-source-calendar"
+            value="calendar"
+            checked={sourceType === 'calendar'}
+            onChange={() => {
+              setSourceType('calendar')
+              setError(null)
+            }}
+          />
+          <label className="form-check-label" htmlFor="similar-spelling-source-calendar">
+            Calendar
+          </label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="similar-spelling-source"
+            id="similar-spelling-source-failed"
+            value="failed"
+            checked={sourceType === 'failed'}
+            onChange={() => {
+              setSourceType('failed')
+              setError(null)
+            }}
+          />
+          <label className="form-check-label" htmlFor="similar-spelling-source-failed">
+            By Failed
+          </label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="similar-spelling-source"
+            id="similar-spelling-source-tnplus"
+            value="tnplus"
+            checked={sourceType === 'tnplus'}
+            onChange={() => {
+              setSourceType('tnplus')
+              setError(null)
+            }}
+          />
+          <label className="form-check-label" htmlFor="similar-spelling-source-tnplus">
+            By TN+
+          </label>
+        </div>
+      </div>
+
+      {isCalendarMode && !selectedDate && (
         <p className="similar-page__hint">
           {loadingDates ? 'Loading available dates...' : 'Select a date from the available list.'}
         </p>
       )}
       {error && <div className="similar-page__error">Error: {error}</div>}
 
-      {selectedDate ? (
+      {isCalendarMode && selectedDate && (
         <>
           <div className="similar-page__selected">
             Selected: <span>{selectedLabel}</span>
@@ -387,11 +448,20 @@ function Similar() {
               Change Date
             </button>
           </div>
+        </>
+      )}
 
-          {loadingQuiz ? (
-            <div className="similar-page__loading">Loading vocabularies...</div>
-          ) : (
-            <div className="card bg-dark text-light border-secondary p-3">
+      {isCalendarMode && !selectedDate ? (
+        <Calendar
+          availableDates={availableDates}
+          selectedDate={selectedDate ?? lastSelectedDate}
+          focusedDate={lastSelectedDate}
+          onSelectDate={handleSelectDate}
+        />
+      ) : loadingQuiz ? (
+        <div className="similar-page__loading">Loading vocabularies...</div>
+      ) : (
+        <div className="card bg-dark text-light border-secondary p-3">
               <div className="row g-2 text-center mb-3">
                 <div className="col-sm">
                   <div className="fw-semibold">Total</div>
@@ -495,16 +565,7 @@ function Similar() {
                   )}
                 </>
               )}
-            </div>
-          )}
-        </>
-      ) : (
-        <Calendar
-          availableDates={availableDates}
-          selectedDate={selectedDate ?? lastSelectedDate}
-          focusedDate={lastSelectedDate}
-          onSelectDate={handleSelectDate}
-        />
+        </div>
       )}
     </div>
   )
