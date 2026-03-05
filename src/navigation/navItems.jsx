@@ -5,23 +5,13 @@ import Similar from '../pages/Other/SimilarSpelling'
 import SimilarPronunciation from '../pages/Other/SimilarPronunciation'
 import Review from '../pages/Other/Review'
 import Definition from '../pages/Other/Definition'
-import ByDate from '../pages/Dictation/ByDate/ByDate'
-import ByFail from '../pages/Dictation/ByFail/ByFail'
-import TNPlus from '../pages/Dictation/TNPlus/TNPlus'
+import DictationPage from '../pages/Other/DictationPage'
 import Edit from '../pages/Edit/Edit'
 
 const navItems = [
   { path: '/list', label: 'List', element: <List /> },
   { path: '/add', label: 'Add', element: <Add /> },
   { path: '/capture', label: 'Capture', element: <Capture /> },
-  {
-    label: 'Dictation',
-    children: [
-      { path: '/dictation/by-date', label: 'By Date', element: <ByDate /> },
-      { path: '/dictation/by-fail', label: 'By Fail', element: <ByFail /> },
-      { path: '/dictation/tn-plus', label: 'TN+', element: <TNPlus /> },
-    ],
-  },
   {
     label: 'Other',
     children: [
@@ -44,6 +34,11 @@ const navItems = [
         path: '/other/definition',
         label: 'Definition',
         element: <Definition />,
+      },
+      {
+        path: '/dictation/by-date',
+        label: 'Dictation',
+        element: <DictationPage />,
       },
     ],
   },

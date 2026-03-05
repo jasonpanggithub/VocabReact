@@ -1,5 +1,5 @@
 ﻿import { useEffect, useRef, useState } from 'react'
-import { API_BASE_URL } from '../../../config/api'
+import { API_BASE_URL } from '../../config/api'
 import './Dictation.css'
 
 const handlePlay = (saySomething) => {

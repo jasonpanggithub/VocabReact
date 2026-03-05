@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import './ByDate.css'
-import Calendar from '../../../components/Calendar/Calendar'
-import Dictation from '../component/Dictation'
-import { API_BASE_URL } from '../../../config/api'
+import './DictationPage.css'
+import Calendar from '../../components/Calendar/Calendar'
+import Dictation from '../../components/Dictation/Dictation'
+import { API_BASE_URL } from '../../config/api'
 
 function toDateKey(date) {
   const year = date.getFullYear()
@@ -19,7 +19,7 @@ function normalizeDateValue(value) {
   return toDateKey(parsed)
 }
 
-function ByDate() {
+function DictationPage() {
   const [sourceType, setSourceType] = useState('calendar')
   const [selectedDate, setSelectedDate] = useState(null)
   const [lastSelectedDate, setLastSelectedDate] = useState(null)
@@ -108,7 +108,7 @@ function ByDate() {
 
   return (
     <div className="bydate">
-      <h1>Dictation by Date</h1>
+      <h1>Dictation</h1>
       <div className="bydate__toolbar">
         <div className="form-check form-check-inline">
           <input
@@ -213,5 +213,5 @@ function ByDate() {
   )
 }
 
-export default ByDate
+export default DictationPage
 
