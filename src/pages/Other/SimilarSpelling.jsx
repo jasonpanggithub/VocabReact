@@ -480,7 +480,7 @@ function Similar() {
               {optionWarning && <div className="similar-page__warning mb-3">{optionWarning}</div>}
 
               {!currentQuestion ? (
-                <div className="text-muted text-center">No vocabularies available.</div>
+                <div className="text-center">No vocabularies available.</div>
               ) : (
                 <>
                   <p className="similar-page__instruction">

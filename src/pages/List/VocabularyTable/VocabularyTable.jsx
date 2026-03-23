@@ -209,7 +209,7 @@ function VocabularyTable() {
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="text-center text-muted py-4">
+                <td colSpan="7" className="text-center  py-4">
                   No vocabulary data available
                 </td>
               </tr>

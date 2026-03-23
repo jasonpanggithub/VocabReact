@@ -165,7 +165,7 @@ function Dictation({ vocabList = [], onUpdateList }) {
             <div>0</div>
           </div>
         </div>
-        <div className="text-center text-muted mt-3">No vocabularies available.</div>
+        <div className="text-center  mt-3">No vocabularies available.</div>
       </div>
     )
   }
