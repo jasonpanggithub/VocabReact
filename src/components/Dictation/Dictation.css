@@ -1,5 +1,32 @@
-﻿.dictation__btn {
+.dictation__btn {
   min-width: 110px;
+}
+
+.dictation__spelling-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.dictation__spelling-row .form-control {
+  flex: 1 1 240px;
+}
+
+.dictation__voice-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.dictation__voice-toggle .form-check-input {
+  margin-left: 0;
+}
+
+.dictation__mic-btn {
+  min-width: 92px;
+  white-space: nowrap;
 }
 
 .dictation__btn--save {

@@ -14,6 +14,9 @@ function Dictation({ vocabList = [], onUpdateList }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [correctCount, setCorrectCount] = useState(0)
   const [spellingInput, setSpellingInput] = useState('')
+  const [voiceEnabled, setVoiceEnabled] = useState(false)
+  const [isListening, setIsListening] = useState(false)
+  const [voiceError, setVoiceError] = useState(null)
   const [showDetails, setShowDetails] = useState(false)
   const [hasMatched, setHasMatched] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
@@ -22,10 +25,13 @@ function Dictation({ vocabList = [], onUpdateList }) {
   const [saveError, setSaveError] = useState(null)
   const [isSaveDisabled, setIsSaveDisabled] = useState(false)
   const lastSpokenRef = useRef(null)
+  const recognitionRef = useRef(null)
 
   const total = vocabList.length
   const currentVocab = vocabList[currentIndex] || null
   const isNextDisabled = currentIndex >= vocabList.length - 1
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+  const isVoiceSupported = Boolean(SpeechRecognition)
 
   useEffect(() => {
     const spelling = currentVocab?.spelling
@@ -35,11 +41,22 @@ function Dictation({ vocabList = [], onUpdateList }) {
     lastSpokenRef.current = spelling
   }, [currentVocab?.spelling])
 
-  const handleSpellingSubmit = (event) => {
-    event.preventDefault()
+  useEffect(() => {
+    return () => {
+      recognitionRef.current?.stop()
+    }
+  }, [])
+
+  const stopListening = () => {
+    recognitionRef.current?.stop()
+    recognitionRef.current = null
+    setIsListening(false)
+  }
+
+  const submitSpellingAttempt = (rawValue) => {
     const now = new Date().toISOString()
     const expected = (currentVocab?.spelling || '').trim().toLowerCase()
-    const actual = spellingInput.trim().toLowerCase()
+    const actual = rawValue.trim().toLowerCase()
     if (!expected || !actual) return
 
     const updateCurrentItem = (updates) => {
@@ -93,12 +110,60 @@ function Dictation({ vocabList = [], onUpdateList }) {
     handleWrongSubmit()
   }
 
+  const handleVoiceInput = () => {
+    if (!voiceEnabled || spellingDisabled || !isVoiceSupported) return
+
+    if (isListening) {
+      stopListening()
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognitionRef.current = recognition
+    recognition.lang = 'en-US'
+    recognition.interimResults = false
+    recognition.maxAlternatives = 1
+
+    recognition.onstart = () => {
+      setVoiceError(null)
+      setIsListening(true)
+    }
+
+    recognition.onresult = (event) => {
+      const transcript = event.results?.[0]?.[0]?.transcript?.trim() || ''
+      if (transcript) {
+        setSpellingInput(transcript)
+        submitSpellingAttempt(transcript)
+      }
+    }
+
+    recognition.onerror = (event) => {
+      setVoiceError(event.error === 'not-allowed' ? 'Microphone permission was denied.' : 'Voice input failed.')
+      setIsListening(false)
+      recognitionRef.current = null
+    }
+
+    recognition.onend = () => {
+      setIsListening(false)
+      recognitionRef.current = null
+    }
+
+    recognition.start()
+  }
+
+  const handleSpellingSubmit = (event) => {
+    event.preventDefault()
+    submitSpellingAttempt(spellingInput)
+  }
+
   const handleNext = () => {
     setCurrentIndex((prev) => Math.min(prev + 1, vocabList.length - 1))
     setSpellingInput('')
     setHasMatched(false)
     setShowAnswer(false)
     setSpellingDisabled(false)
+    setVoiceError(null)
+    stopListening()
   }
 
   const handleAnswer = () => {
@@ -122,6 +187,7 @@ function Dictation({ vocabList = [], onUpdateList }) {
     }
     setShowAnswer(true)
     setSpellingDisabled(true)
+    stopListening()
   }
 
   const handleSave = async () => {
@@ -194,18 +260,49 @@ function Dictation({ vocabList = [], onUpdateList }) {
           </label>
         </div>
         <div className="col-sm-9 text-start">
-          <input
-            id="spelling"
-            type="text"
-            className="form-control bg-dark text-light border-secondary"
-            value={spellingInput}
-            onChange={(event) => setSpellingInput(event.target.value)}
-            disabled={spellingDisabled}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck={false}
-          />
+          <div className="dictation__spelling-row">
+            <input
+              id="spelling"
+              type="text"
+              className="form-control bg-dark text-light border-secondary"
+              value={spellingInput}
+              onChange={(event) => setSpellingInput(event.target.value)}
+              disabled={spellingDisabled}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
+            />
+            <label className="form-check-label dictation__voice-toggle">
+              <input
+                type="checkbox"
+                className="form-check-input mt-0"
+                checked={voiceEnabled}
+                onChange={(event) => {
+                  const nextValue = event.target.checked
+                  setVoiceEnabled(nextValue)
+                  setVoiceError(null)
+                  if (!nextValue) {
+                    stopListening()
+                  }
+                }}
+                disabled={spellingDisabled || !isVoiceSupported}
+              />
+              <span>by voice</span>
+            </label>
+            <button
+              type="button"
+              className="btn btn-outline-light dictation__mic-btn"
+              onClick={handleVoiceInput}
+              disabled={!voiceEnabled || spellingDisabled || !isVoiceSupported}
+            >
+              {isListening ? 'Stop mic' : 'Mic'}
+            </button>
+          </div>
+          {!isVoiceSupported && (
+            <div className="text-warning small mt-1">Voice input is not supported in this browser.</div>
+          )}
+          {voiceError && <div className="text-danger small mt-1">{voiceError}</div>}
         </div>
       </form>
 
