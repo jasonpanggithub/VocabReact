@@ -5,12 +5,17 @@ import Content from './components/Content/Content'
 import navItems from './navigation/navItems'
 
 function App() {
+  const routerBasename =
+    import.meta.env.BASE_URL === '/'
+      ? undefined
+      : import.meta.env.BASE_URL.replace(/\/$/, '')
+
   const routes = navItems.flatMap((item) =>
     item.children ? item.children : item
   )
 
   return (
-    <Router>
+    <Router basename={routerBasename}>
       <Menu />
       <Content>
         <Routes>

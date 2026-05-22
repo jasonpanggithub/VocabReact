@@ -1,0 +1,4 @@
+1. for Similar Spelling, add a switch to show definition
+2. for Similar Pronunciation, add a switch to show definition
+3. add log, just for exercises
+4. deploy it to local server
